@@ -12,6 +12,7 @@ export 'ui/cards/hero_card.dart';
 export 'ui/cards/info_card.dart';
 export 'ui/cards/shimmer_card.dart';
 export 'ui/containers/green_box_container.dart';
+export 'ui/filter_selector.dart';
 export 'ui/floating_nav_bar.dart';
 export 'ui/images/image_preview.dart';
 export 'ui/inputs/amount_input_field.dart';

@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 
 class WkAppColors {
   // --- Brand Colors ---
-  static const Color primary = Color(0xFF1A43BF); // Example: Deep Westerlund Blue
-  static const Color secondary = Color(0xFF00C853); // Example: Action Green
+  static const Color primary = Color(0xFF1A43BF);
+  static const Color secondary = Color(0xFF00C853);
   static const Color background = Color(0xFFF8F9FA);
   static const Color surface = Colors.white;
+
+  // --- Structural & Feedback ---
+  static const Color border = Color(0xFFE0E0E0);
+  static const Color divider = Color(0xFFEEEEEE);
+  static const Color shadow = Color(0x1A000000);
 
   // --- Primary Scale (Blue) ---
   static const Color primary50 = Color(0xFFE8EAF6);
