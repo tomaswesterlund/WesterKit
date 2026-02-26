@@ -21,7 +21,6 @@ export 'ui/inputs/email_input_field.dart';
 export 'ui/inputs/entity_dropdown_field.dart';
 export 'ui/inputs/images/image_picker.dart';
 export 'ui/inputs/images/image_picker_buttons.dart';
-export 'ui/inputs/images/image_preview.dart';
 export 'ui/inputs/images/picker_tile.dart';
 export 'ui/inputs/phone_number_input_field.dart';
 export 'ui/inputs/text_input_field.dart';
