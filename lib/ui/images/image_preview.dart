@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 
 /// A sleek preview card for receipts or documents.
 /// Accepts a future for the image URL to remain service-agnostic.
-class ReceiptPreview extends StatelessWidget {
+class ImagePreview extends StatelessWidget {
   /// A future that resolves to the image URL (e.g., a signed URL).
   final Future<String>? imageUrlFuture;
   
   /// Or a direct URL if already available.
   final String? imageUrl;
-  
   final double height;
   final String errorText;
 
-  const ReceiptPreview({
+  const ImagePreview({
     this.imageUrlFuture,
     this.imageUrl,
     this.height = 300,
