@@ -38,3 +38,5 @@ export 'ui/views/error_view.dart';
 export 'ui/views/loading_view.dart';
 export 'ui/views/success_view.dart';
 export 'ui/views/unknown_state_view.dart';
+export 'wk_app_colors.dart';
+export 'wk_config.dart';
