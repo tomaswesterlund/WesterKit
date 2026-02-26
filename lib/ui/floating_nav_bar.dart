@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+import 'package:wester_kit/wk_app_colors.dart'; // Adjust path based on your lib structure
+
 class FloatingNavBar extends StatelessWidget {
   final int currentIndex;
   final List<FloatingNavBarItem> items;
   final Function(int) onChanged;
 
-  // Color Inputs
+  // Color Inputs - Defaulted to WkAppColors
   final Color backgroundColor;
   final Color activeColor;
   final Color inactiveColor;
@@ -19,25 +22,25 @@ class FloatingNavBar extends StatelessWidget {
     required this.currentIndex,
     required this.onChanged,
     required this.items,
-    // Defaulting to your theme scale/colors
-    this.backgroundColor = Colors.white,
-    this.activeColor = const Color(0xFF3B4856), // secondaryScale[500]
-    this.inactiveColor = Colors.grey,
-    this.dangerColor = const Color(0xFFE74C3C), // danger
-    this.warningColor = const Color(0xFFF1C40F), // warning
-    this.infoColor = const Color(0xFF3498DB), // info
-    this.badgeTextColor = Colors.white,
+    // Using WkAppColors as the default source of truth
+    this.backgroundColor = WkAppColors.surface,
+    this.activeColor = WkAppColors.primary,
+    this.inactiveColor = WkAppColors.textSecondary,
+    this.dangerColor = WkAppColors.danger,
+    this.warningColor = WkAppColors.warning,
+    this.infoColor = WkAppColors.info,
+    this.badgeTextColor = WkAppColors.surface,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 90,
+      height: 70, // Slightly tightened height for a sleeker look
       margin: const EdgeInsets.fromLTRB(24, 0, 24, 30),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(25),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 10))],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 20, offset: const Offset(0, 10))],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -54,20 +57,24 @@ class FloatingNavBar extends StatelessWidget {
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Container(
+                    // Icon Container
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: isActive ? activeColor : Colors.transparent,
+                        // Uses primary scale for active background if desired,
+                        // or stays transparent
+                        color: isActive ? activeColor.withOpacity(0.1) : Colors.transparent,
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Icon(item.icon, color: isActive ? backgroundColor : inactiveColor, size: 24),
+                      child: Icon(item.icon, color: isActive ? activeColor : inactiveColor, size: 24),
                     ),
 
                     // Badge Logic
                     if (item.showDanger || item.warningBadgeCount > 0 || item.badgeCount > 0)
                       Positioned(
-                        top: -2,
-                        right: -2,
+                        top: 0,
+                        right: 0,
                         child: _BadgeIndicator(
                           color: item.showDanger
                               ? dangerColor
@@ -87,7 +94,7 @@ class FloatingNavBar extends StatelessWidget {
                 Text(
                   item.label,
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
                     color: isActive ? activeColor : inactiveColor,
                   ),
@@ -101,7 +108,6 @@ class FloatingNavBar extends StatelessWidget {
   }
 }
 
-/// Internal helper for the circular badges
 class _BadgeIndicator extends StatelessWidget {
   final Color color;
   final String text;
@@ -113,16 +119,16 @@ class _BadgeIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(2),
+      padding: const EdgeInsets.all(1.5),
       decoration: BoxDecoration(color: borderColor, shape: BoxShape.circle),
       child: Container(
-        width: 14,
-        height: 14,
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+        constraints: const BoxConstraints(minWidth: 14, minHeight: 14),
         decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(color: textColor, fontSize: 10, fontWeight: FontWeight.bold),
+            style: TextStyle(color: textColor, fontSize: 8, fontWeight: FontWeight.bold),
           ),
         ),
       ),

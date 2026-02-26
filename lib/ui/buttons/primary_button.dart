@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class WkPrimaryButton extends StatelessWidget {
+class PrimaryButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final bool canSubmit;
@@ -8,7 +8,7 @@ class WkPrimaryButton extends StatelessWidget {
   final IconData? icon;
   final Color? backgroundColor;
 
-  const WkPrimaryButton({
+  const PrimaryButton({
     required this.label,
     required this.onPressed,
     this.canSubmit = true,
