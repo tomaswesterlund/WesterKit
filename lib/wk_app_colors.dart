@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
 class WkAppColors {
-  // Prevent instantiation
-  WkAppColors._();
-
   // --- Brand Colors ---
   static const Color primary = Color(0xFF1A43BF); // Example: Deep Westerlund Blue
   static const Color secondary = Color(0xFF00C853); // Example: Action Green
