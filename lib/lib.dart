@@ -26,6 +26,7 @@ export 'ui/inputs/phone_number_input_field.dart';
 export 'ui/inputs/text_input_field.dart';
 export 'ui/my_app_bar.dart';
 export 'ui/pills/status_pill.dart';
+export 'ui/state_switcher.dart';
 export 'ui/texts/amount_text.dart';
 export 'ui/texts/body_text.dart';
 export 'ui/texts/header_text.dart';
