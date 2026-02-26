@@ -36,6 +36,7 @@ export 'ui/tiles/info_tile.dart';
 export 'ui/views/access_denied_view.dart';
 export 'ui/views/empty_state_view.dart';
 export 'ui/views/error_view.dart';
+export 'ui/views/loading_bar.dart';
 export 'ui/views/loading_view.dart';
 export 'ui/views/success_view.dart';
 export 'ui/views/unknown_state_view.dart';
