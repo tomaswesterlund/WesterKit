@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class DatePickerField extends StatelessWidget {
   final String label;
   final DateTime? selectedDate;
-  final ValueChanged<DateTime?> onDateSelected;
+  final Function(DateTime?) onDateChanged;
   final DateTime? firstDate;
   final DateTime? lastDate;
   final bool isRequired;
@@ -18,7 +18,7 @@ class DatePickerField extends StatelessWidget {
 
   const DatePickerField({
     required this.label,
-    required this.onDateSelected,
+    required this.onDateChanged,
     this.selectedDate,
     this.firstDate,
     this.lastDate,
@@ -48,7 +48,7 @@ class DatePickerField extends StatelessWidget {
     );
 
     if (picked != null) {
-      onDateSelected(picked);
+      onDateChanged(picked);
     }
   }
 
