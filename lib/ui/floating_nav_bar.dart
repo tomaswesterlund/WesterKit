@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
-import 'package:wester_kit/wk_app_colors.dart'; // Adjust path based on your lib structure
+import 'package:wester_kit/wk_app_colors.dart';
 
 class FloatingNavBar extends StatelessWidget {
   final int currentIndex;

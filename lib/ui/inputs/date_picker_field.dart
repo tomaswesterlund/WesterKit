@@ -27,8 +27,8 @@ class DatePickerField extends StatelessWidget {
     this.isRequired = false,
     this.helpText,
     this.prefixIcon,
-    this.primaryColor = const Color(0xFF1A4644), // Default teal
-    this.borderColor = const Color(0xFFE0E0E0), // Default grey
+    this.primaryColor = WkAppColors.primary, // Updated to Brand Primary
+    this.borderColor = WkAppColors.border, // Updated to Brand Border
     super.key,
   });
 
@@ -43,7 +43,11 @@ class DatePickerField extends StatelessWidget {
       builder: (context, child) {
         return Theme(
           data: theme.copyWith(
-            colorScheme: ColorScheme.light(primary: primaryColor, onPrimary: Colors.white, onSurface: Colors.black87),
+            colorScheme: ColorScheme.light(
+              primary: primaryColor,
+              onPrimary: Colors.white,
+              onSurface: WkAppColors.textPrimary,
+            ),
           ),
           child: child!,
         );
@@ -70,14 +74,14 @@ class DatePickerField extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // H6 Style (14px)
-              BodyText.medium(label, color: WkAppColors.textPrimary),
-              if (isRequired) BodyText.small(' *', color: Colors.red, fontWeight: FontWeight.bold),
+              // H6 Style (14px Bold) per typography guide
+              HeaderText.six(label, color: WkAppColors.textPrimary),
+              if (isRequired) BodyText.small(' *', color: WkAppColors.danger, fontWeight: FontWeight.bold),
               if (helpText != null) ...[
                 const SizedBox(width: 6),
                 GestureDetector(
                   onTap: () => _showHelpDialog(context),
-                  child: Icon(Icons.help_outline_rounded, size: 16, color: Colors.grey.shade600),
+                  child: const Icon(Icons.help_outline_rounded, size: 16, color: WkAppColors.grey500),
                 ),
               ],
             ],
@@ -90,7 +94,7 @@ class DatePickerField extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
           child: InputDecorator(
             decoration: InputDecoration(
-              prefixIcon: prefixIcon ?? const Icon(Icons.calendar_month_rounded, size: 20),
+              prefixIcon: prefixIcon ?? Icon(Icons.calendar_month_rounded, size: 20, color: primaryColor),
               contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
@@ -105,14 +109,13 @@ class DatePickerField extends StatelessWidget {
                 borderSide: BorderSide(color: primaryColor, width: 2),
               ),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: WkAppColors.surface,
             ),
             child: Text(
               displayString,
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontSize: 16.0,
-                color: selectedDate == null ? Colors.grey.shade500 : Colors.black87,
-                // Use Mono font for the actual date values
+                color: selectedDate == null ? WkAppColors.grey500 : WkAppColors.textPrimary,
                 fontFamily: selectedDate == null ? null : 'NotoSansMono',
               ),
             ),
@@ -127,8 +130,8 @@ class DatePickerField extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: HeaderText.three(label), // H3 Style
-        content: BodyText.medium(helpText!), // Body Medium
+        title: HeaderText.three(label),
+        content: BodyText.medium(helpText!),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
