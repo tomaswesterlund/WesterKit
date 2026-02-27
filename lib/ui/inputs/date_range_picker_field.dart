@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wester_kit/wk_app_colors.dart';
 
 class DateRangePickerField extends StatelessWidget {
   final String label;
@@ -29,9 +30,9 @@ class DateRangePickerField extends StatelessWidget {
         return Theme(
           data: theme.copyWith(
             colorScheme: theme.colorScheme.copyWith(
-              primary: const Color(0xFF1A4644), // Brand teal
+              primary: WkAppColors.primary, // Using WkAppColors
               onPrimary: Colors.white,
-              onSurface: Colors.black87,
+              onSurface: WkAppColors.textPrimary,
             ),
           ),
           child: child!,
@@ -58,28 +59,32 @@ class DateRangePickerField extends StatelessWidget {
       borderRadius: BorderRadius.circular(20.0),
       child: InputDecorator(
         decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.calendar_today_rounded, size: 20, color: Color(0xFF1A4644)),
+          prefixIcon: const Icon(
+            Icons.calendar_today_rounded, 
+            size: 20, 
+            color: WkAppColors.primary, // Using WkAppColors
+          ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
-            borderSide: BorderSide(color: Colors.grey.shade300),
+            borderSide: const BorderSide(color: WkAppColors.border),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
-            borderSide: BorderSide(color: Colors.grey.shade300),
+            borderSide: const BorderSide(color: WkAppColors.border),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
-            borderSide: const BorderSide(color: Color(0xFF1A4644), width: 2),
+            borderSide: const BorderSide(color: WkAppColors.primary, width: 2),
           ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: WkAppColors.surface,
         ),
         child: Text(
           displayString,
           style: theme.textTheme.bodyMedium?.copyWith(
             fontSize: 16.0,
-            color: selectedRange == null ? Colors.grey.shade500 : Colors.black87,
+            color: selectedRange == null ? WkAppColors.grey500 : WkAppColors.textPrimary,
             // Numbers and dates use Noto Sans Mono per guide
             fontFamily: selectedRange == null ? null : 'NotoSansMono',
           ),

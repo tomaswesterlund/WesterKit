@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 class DefaultCard extends StatelessWidget {
   final Widget child;
-  final double padding;
+  final EdgeInsets padding;
   final VoidCallback? onTap;
 
   const DefaultCard({
     super.key,
     required this.child,
-    this.padding = 0.0,
+    this.padding = const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
     this.onTap,
   });
 
@@ -21,11 +21,7 @@ class DefaultCard extends StatelessWidget {
         color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         elevation: 2,
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(padding),
-          child: child,
-        ),
+        child: Container(width: double.infinity, padding: padding, child: child),
       ),
     );
   }
