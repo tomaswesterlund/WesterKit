@@ -15,6 +15,7 @@ export 'ui/containers/green_box_container.dart';
 export 'ui/filter_selector.dart';
 export 'ui/floating_nav_bar.dart';
 export 'ui/inputs/amount_input_field.dart';
+export 'ui/inputs/date_picker_field.dart';
 export 'ui/inputs/date_range_picker_field.dart';
 export 'ui/inputs/email_input_field.dart';
 export 'ui/inputs/entity_dropdown_field.dart';
