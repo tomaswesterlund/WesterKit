@@ -1,17 +1,18 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wester_kit/ui/inputs/images/image_picker_buttons.dart';
-import 'package:wester_kit/ui/inputs/images/image_preview.dart';
+import 'package:wester_kit/ui/inputs/images/x_file_image_preview.dart';
 
 class ImagePickerField extends StatelessWidget {
-  final File? imageFile;
+  final XFile? xFile;
   final VoidCallback onCamera;
   final VoidCallback onGallery;
   final VoidCallback? onRemove; // Useful for resetting the form
 
   const ImagePickerField({
-    required this.imageFile,
+    required this.xFile,
     required this.onCamera,
     required this.onGallery,
     this.onRemove,
@@ -22,10 +23,10 @@ class ImagePickerField extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
-      child: imageFile != null
-          ? ImagePreview(
+      child: xFile != null
+          ? XFileImagePreview(
               key: const ValueKey('preview'),
-              imageUrl: imageFile!.path,
+              xFile: xFile!,
               onRemove: onRemove, // Pass a way to delete the photo
             )
           : ImagePickerButtons(
