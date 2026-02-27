@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
 import 'package:wester_kit/wk_app_colors.dart';
 
@@ -39,7 +40,7 @@ class AmountInputField extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              HeaderText.six(label, color: WkAppColors.textPrimary),
+              BodyText.medium(label, color: WkAppColors.textPrimary),
               if (isRequired)
                 Text(
                   ' *',
