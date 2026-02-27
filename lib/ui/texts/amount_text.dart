@@ -75,15 +75,20 @@ class AmountText extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
-    return Text(
-      text,
-      textAlign: textAlign,
-      style: TextStyle(
-        color: color ?? theme.textTheme.bodyLarge?.color,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        // Mandated for numeric data in your design system
-        fontFamily: 'NotoSansMono', 
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      // Ensures the scaling stays consistent with your intended alignment
+      alignment: textAlign == TextAlign.center ? Alignment.center : Alignment.centerLeft,
+      child: Text(
+        text,
+        textAlign: textAlign,
+        style: TextStyle(
+          color: color ?? theme.textTheme.bodyLarge?.color,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          // Mandated for numeric data in your design system
+          fontFamily: 'NotoSansMono', 
+        ),
       ),
     );
   }
