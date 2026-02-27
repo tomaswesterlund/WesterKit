@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wester_kit/lib.dart';
 import 'package:wester_kit/wk_app_colors.dart';
 
 class EntityDropdownField<T> extends StatelessWidget {
@@ -32,10 +33,7 @@ class EntityDropdownField<T> extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                label,
-                style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: WkAppColors.textPrimary),
-              ),
+              BodyText.medium(label, color: WkAppColors.textPrimary),
               if (isRequired)
                 const Text(
                   ' *',

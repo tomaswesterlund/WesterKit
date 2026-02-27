@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
+import 'package:wester_kit/wk_app_colors.dart';
 
 class PhoneNumberInputField extends StatelessWidget {
   final String label;
@@ -34,8 +35,7 @@ class PhoneNumberInputField extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // H6 Style (14px)
-              HeaderText.six(label, color: const Color(0xFF1A4644)),
+              BodyText.medium(label, color: WkAppColors.textPrimary),
               if (isRequired) BodyText.small(' *', color: Colors.red, fontWeight: FontWeight.bold),
               if (helpText != null) ...[
                 const SizedBox(width: 6),

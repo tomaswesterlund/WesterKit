@@ -42,7 +42,7 @@ class TextInputField extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              HeaderText.six(label, color: WkAppColors.textPrimary),
+              BodyText.medium(label, color: WkAppColors.textPrimary),
               if (isRequired) BodyText.small(' *', color: Colors.red, fontWeight: FontWeight.bold),
               if (helpText != null) ...[
                 const SizedBox(width: 6),

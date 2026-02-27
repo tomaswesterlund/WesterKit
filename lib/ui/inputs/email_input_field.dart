@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
+import 'package:wester_kit/wk_app_colors.dart';
 
 class EmailInputField extends StatelessWidget {
   final String label;
@@ -27,7 +29,7 @@ class EmailInputField extends StatelessWidget {
         // --- Label using H6 spec ---
         Padding(
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: HeaderText.six(label, color: const Color(0xFF1A4644)),
+          child: BodyText.medium(label, color: WkAppColors.textPrimary),
         ),
 
         TextFormField(
