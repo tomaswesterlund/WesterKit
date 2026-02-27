@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:wester_kit/ui/texts/body_text.dart';
+import 'package:wester_kit/ui/texts/header_text.dart';
 
 class TextInputField extends StatelessWidget {
   final String label;
@@ -10,8 +11,8 @@ class TextInputField extends StatelessWidget {
   final String? helpText;
   final TextInputType keyboardType;
   final int maxLines;
-  final Widget? prefixIcon; // Added
-  final bool readOnly; // Added
+  final Widget? prefixIcon;
+  final bool readOnly;
 
   const TextInputField({
     required this.label,
@@ -22,75 +23,53 @@ class TextInputField extends StatelessWidget {
     this.helpText,
     this.keyboardType = TextInputType.text,
     this.maxLines = 1,
-    this.prefixIcon, // Added
-    this.readOnly = false, // Added
+    this.prefixIcon,
+    this.readOnly = false,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Label Row
+        // --- Label Row ---
         Padding(
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                label,
-                style: GoogleFonts.raleway(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1A4644),
-                ),
-              ),
-              if (isRequired)
-                Text(
-                  ' *',
-                  style: GoogleFonts.raleway(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              // H6 style for labels (14px)
+              HeaderText.six(label, color: const Color(0xFF1A4644)),
+              if (isRequired) BodyText.small(' *', color: Colors.red, fontWeight: FontWeight.bold),
               if (helpText != null) ...[
                 const SizedBox(width: 6),
                 GestureDetector(
                   onTap: () => _showHelpDialog(context),
-                  child: Icon(
-                    Icons.help_outline_rounded,
-                    size: 16,
-                    color: Colors.grey.shade600,
-                  ),
+                  child: Icon(Icons.help_outline_rounded, size: 16, color: Colors.grey.shade600),
                 ),
               ],
             ],
           ),
         ),
 
-        // Input Field
+        // --- Input Field ---
         TextFormField(
           initialValue: initialValue,
           onChanged: onChanged,
           keyboardType: keyboardType,
           maxLines: maxLines,
-          readOnly: readOnly, // Apply readOnly property
-          style: GoogleFonts.raleway(
-            fontSize: 16.0, 
-            color: readOnly ? Colors.grey.shade600 : Colors.black87, // Dim text if readOnly
-          ),
+          readOnly: readOnly,
+          // Body Medium (16px) for input text
+          style: theme.textTheme.bodyMedium?.copyWith(color: readOnly ? Colors.grey.shade600 : Colors.black87),
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: prefixIcon, // Apply prefixIcon
-            hintStyle: GoogleFonts.raleway(
-              fontSize: 16.0,
-              color: Colors.grey.shade500,
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 18.0,
-            ),
+            prefixIcon: prefixIcon,
+            // Body Medium for hint text
+            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade500),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(color: Colors.grey.shade300),
@@ -101,13 +80,9 @@ class TextInputField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: readOnly ? Colors.grey.shade300 : const Color(0xFF1A4644), 
-                width: 2,
-              ),
+              borderSide: BorderSide(color: readOnly ? Colors.grey.shade300 : const Color(0xFF1A4644), width: 2),
             ),
             filled: true,
-            // Light grey background if readOnly to signify it is disabled
             fillColor: readOnly ? Colors.grey.shade100 : Colors.white,
           ),
         ),
@@ -120,21 +95,12 @@ class TextInputField extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          label,
-          style: GoogleFonts.raleway(fontWeight: FontWeight.bold),
-        ),
-        content: Text(helpText!, style: GoogleFonts.raleway()),
+        title: HeaderText.three(label), // H3 for Dialog titles
+        content: BodyText.medium(helpText!), // Body Medium for content
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Entendido',
-              style: TextStyle(
-                color: Color(0xFF1A4644), 
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: HeaderText.six('Entendido', color: Color(0xFF1A4644)),
           ),
         ],
       ),

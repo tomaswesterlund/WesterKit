@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:wester_kit/ui/texts/header_text.dart';
 
 class EmailInputField extends StatelessWidget {
   final String label;
@@ -19,50 +19,43 @@ class EmailInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // --- Label using H6 spec ---
         Padding(
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: Text(
-            label,
-            style: GoogleFonts.raleway(
-              fontSize: 14.0,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF1A4644),
-            ),
-          ),
+          child: HeaderText.six(label, color: const Color(0xFF1A4644)),
         ),
+
         TextFormField(
           initialValue: initialValue,
           enabled: enabled,
           onChanged: onChanged,
-          // 1. Optimized for Email (shows @ and . on main keyboard)
           keyboardType: TextInputType.emailAddress,
-          // 2. Disables auto-correct (it's annoying for unique email handles)
           autocorrect: false,
-          // 3. Built-in validation logic
+
+          // Using Theme's bodyMedium (16px / 24 line) for input text
+          style: theme.textTheme.bodyMedium?.copyWith(color: enabled ? Colors.black87 : Colors.grey.shade600),
+
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter your email';
+              return 'Por favor ingresa tu correo';
             }
             final bool emailValid = RegExp(
-                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                .hasMatch(value);
-            return emailValid ? null : 'Enter a valid email address';
+              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+            ).hasMatch(value);
+            return emailValid ? null : 'Ingresa un correo válido';
           },
-          style: GoogleFonts.raleway(fontSize: 16.0, color: Colors.black87),
+
           decoration: InputDecoration(
             prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF1A4644)),
             hintText: hint,
-            hintStyle: GoogleFonts.raleway(
-              fontSize: 16.0,
-              color: Colors.grey.shade400,
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 18.0,
-            ),
+            // Using Theme's bodyMedium for hint
+            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade400),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(color: Colors.grey.shade300),
@@ -80,7 +73,7 @@ class EmailInputField extends StatelessWidget {
               borderSide: const BorderSide(color: Colors.redAccent, width: 1),
             ),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: enabled ? Colors.white : Colors.grey.shade50,
           ),
         ),
       ],

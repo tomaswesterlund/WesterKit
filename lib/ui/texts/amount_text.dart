@@ -1,53 +1,89 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:wester_kit/extensions/formatters/currency_formatter.dart';
 
 class AmountText extends StatelessWidget {
   final String text;
   final double fontSize;
-  final Color color;
-  final FontWeight fontWeight; // Added field
+  final Color? color;
+  final FontWeight fontWeight;
+  final TextAlign? textAlign;
 
   const AmountText(
     this.text, {
     this.fontSize = 48.0,
-    this.color = Colors.black,
-    this.fontWeight = FontWeight.bold, // Defaulted to bold
+    this.color,
+    this.fontWeight = FontWeight.bold,
+    this.textAlign,
     super.key,
   });
 
-  AmountText.fromDouble(
+  /// Factory for double values
+  factory AmountText.fromDouble(
     double amount, {
-    this.fontSize = 48.0,
-    this.color = Colors.black,
-    this.fontWeight = FontWeight.bold,
-    super.key,
-  }) : text = CurrencyFormatter.fromDouble(amount);
+    double fontSize = 48.0,
+    Color? color,
+    FontWeight fontWeight = FontWeight.bold,
+    TextAlign? textAlign,
+    Key? key,
+  }) =>
+      AmountText(
+        CurrencyFormatter.fromDouble(amount),
+        key: key,
+        fontSize: fontSize,
+        color: color,
+        fontWeight: fontWeight,
+        textAlign: textAlign,
+      );
 
-  AmountText.fromInt(
+  /// Factory for integer values
+  factory AmountText.fromInt(
     int amount, {
-    this.fontSize = 48.0,
-    this.color = Colors.black,
-    this.fontWeight = FontWeight.bold,
-    super.key,
-  }) : text = CurrencyFormatter.fromDouble(amount.toDouble());
+    double fontSize = 48.0,
+    Color? color,
+    FontWeight fontWeight = FontWeight.bold,
+    TextAlign? textAlign,
+    Key? key,
+  }) =>
+      AmountText(
+        CurrencyFormatter.fromDouble(amount.toDouble()),
+        key: key,
+        fontSize: fontSize,
+        color: color,
+        fontWeight: fontWeight,
+        textAlign: textAlign,
+      );
 
-  AmountText.fromCents(
+  /// Factory for cent values
+  factory AmountText.fromCents(
     int amount, {
-    this.fontSize = 48.0,
-    this.color = Colors.black,
-    this.fontWeight = FontWeight.bold,
-    super.key,
-  }) : text = CurrencyFormatter.fromCents(amount);
+    double fontSize = 48.0,
+    Color? color,
+    FontWeight fontWeight = FontWeight.bold,
+    TextAlign? textAlign,
+    Key? key,
+  }) =>
+      AmountText(
+        CurrencyFormatter.fromCents(amount),
+        key: key,
+        fontSize: fontSize,
+        color: color,
+        fontWeight: fontWeight,
+        textAlign: textAlign,
+      );
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Text(
       text,
-      style: GoogleFonts.notoSansMono(
-        color: color,
+      textAlign: textAlign,
+      style: TextStyle(
+        color: color ?? theme.textTheme.bodyLarge?.color,
         fontSize: fontSize,
-        fontWeight: fontWeight, // Applied here
+        fontWeight: fontWeight,
+        // Mandated for numeric data in your design system
+        fontFamily: 'NotoSansMono', 
       ),
     );
   }

@@ -16,19 +16,15 @@ class UnknownStateView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Using a subtle grey icon to represent an "empty" or "unknown" state
-            Icon(
-              Icons.help_outline_rounded,
-              color: Colors.grey.shade400,
-              size: 80,
-            ),
+            Icon(Icons.help_outline_rounded, color: Colors.grey.shade400, size: 80),
             const SizedBox(height: 24),
 
             // Primary Message
-            const HeaderText.three('Estado Desconocido', color: Colors.black87),
+            HeaderText.three('Estado Desconocido', color: Colors.black87),
             const SizedBox(height: 8),
 
             // Secondary Helper Text
-            const BodyText.medium(
+            BodyText.medium(
               'No pudimos determinar la información a mostrar. Por favor, intenta recargar la pantalla.',
               color: Colors.grey,
               textAlign: TextAlign.center,
@@ -43,11 +39,7 @@ class UnknownStateView extends StatelessWidget {
                 },
                 icon: const Icon(Icons.refresh),
                 label: const Text('Recargar'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               ),
           ],
         ),

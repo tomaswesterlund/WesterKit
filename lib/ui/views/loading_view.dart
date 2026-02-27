@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:wester_kit/ui/texts/body_text.dart';
+import 'package:wester_kit/ui/texts/header_text.dart';
 
-/// A sleek, centered loading view that adapts to the app's theme.
-/// Part of the WesterKit library.
 class LoadingView extends StatelessWidget {
   final String title;
   final String? description;
-  final Widget? logo; // Allows passing a custom logo per project
+  final Widget? logo;
 
   const LoadingView({this.title = 'Cargando información...', this.description, this.logo, super.key});
 
@@ -20,35 +20,27 @@ class LoadingView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Flexible logo section: if no logo is passed, it remains empty
+            // Flexible logo section
             if (logo != null) ...[Opacity(opacity: 0.8, child: logo!), const SizedBox(height: 40)],
 
             // A sleek, thin progress bar using theme colors
             SizedBox(
               width: 120,
               child: LinearProgressIndicator(
-                backgroundColor: colorScheme.surfaceVariant, // Standalone alternative
+                backgroundColor: colorScheme.surfaceVariant,
                 color: colorScheme.secondary,
                 minHeight: 2,
               ),
             ),
             const SizedBox(height: 24),
 
-            // Title using the theme's Headline style
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
+            // Title using H3 style (20px / 28 line)
+            HeaderText.three(title, textAlign: TextAlign.center),
 
-            // Description using the theme's Body style
+            // Description using Body Medium (16px / 24 line)
             if (description != null) ...[
               const SizedBox(height: 8),
-              Text(
-                description!,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor),
-              ),
+              BodyText.medium(description!, textAlign: TextAlign.center, color: theme.hintColor),
             ],
           ],
         ),

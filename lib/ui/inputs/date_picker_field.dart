@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:wester_kit/ui/texts/body_text.dart';
+import 'package:wester_kit/ui/texts/header_text.dart';
 
 class DatePickerField extends StatelessWidget {
   final String label;
   final DateTime? selectedDate;
-  final Function(DateTime?) onDateChanged;
+  final ValueChanged<DateTime?> onDateChanged;
   final DateTime? firstDate;
   final DateTime? lastDate;
   final bool isRequired;
@@ -26,11 +27,13 @@ class DatePickerField extends StatelessWidget {
     this.helpText,
     this.prefixIcon,
     this.primaryColor = const Color(0xFF1A4644), // Default teal
-    this.borderColor = const Color(0xFFE0E0E0), // Default grey (shade300)
+    this.borderColor = const Color(0xFFE0E0E0), // Default grey
     super.key,
   });
 
   Future<void> _pickDate(BuildContext context) async {
+    final theme = Theme.of(context);
+
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
@@ -38,9 +41,8 @@ class DatePickerField extends StatelessWidget {
       lastDate: lastDate ?? DateTime(2100),
       builder: (context, child) {
         return Theme(
-          data: Theme.of(context).copyWith(
+          data: theme.copyWith(
             colorScheme: ColorScheme.light(primary: primaryColor, onPrimary: Colors.white, onSurface: Colors.black87),
-            textTheme: GoogleFonts.ralewayTextTheme(),
           ),
           child: child!,
         );
@@ -54,26 +56,22 @@ class DatePickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final dateFormat = DateFormat('dd/MM/yyyy');
     final displayString = selectedDate == null ? 'Seleccionar fecha' : dateFormat.format(selectedDate!);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // --- Label Row ---
         Padding(
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                label,
-                style: GoogleFonts.raleway(fontSize: 14.0, fontWeight: FontWeight.w600, color: primaryColor),
-              ),
-              if (isRequired)
-                const Text(
-                  ' *',
-                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                ),
+              // H6 Style (14px)
+              HeaderText.six(label, color: primaryColor),
+              if (isRequired) BodyText.small(' *', color: Colors.red, fontWeight: FontWeight.bold),
               if (helpText != null) ...[
                 const SizedBox(width: 6),
                 GestureDetector(
@@ -85,6 +83,7 @@ class DatePickerField extends StatelessWidget {
           ),
         ),
 
+        // --- Input Decorator ---
         InkWell(
           onTap: () => _pickDate(context),
           borderRadius: BorderRadius.circular(20.0),
@@ -109,9 +108,11 @@ class DatePickerField extends StatelessWidget {
             ),
             child: Text(
               displayString,
-              style: GoogleFonts.raleway(
+              style: theme.textTheme.bodyMedium?.copyWith(
                 fontSize: 16.0,
                 color: selectedDate == null ? Colors.grey.shade500 : Colors.black87,
+                // Use Mono font for the actual date values
+                fontFamily: selectedDate == null ? null : 'NotoSansMono',
               ),
             ),
           ),
@@ -125,15 +126,12 @@ class DatePickerField extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(label, style: GoogleFonts.raleway(fontWeight: FontWeight.bold)),
-        content: Text(helpText!, style: GoogleFonts.raleway()),
+        title: HeaderText.three(label), // H3 Style
+        content: BodyText.medium(helpText!), // Body Medium
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Entendido',
-              style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-            ),
+            child: HeaderText.six('Entendido', color: primaryColor),
           ),
         ],
       ),

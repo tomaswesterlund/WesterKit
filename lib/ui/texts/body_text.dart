@@ -1,70 +1,112 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class BodyText extends StatelessWidget {
   final String text;
-  final double fontSize;
-  final double lineHeight;
-  final FontWeight fontWeight;
-  final Color color;
-  final TextAlign? textAlign; // Added textAlign field
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final Color? color;
 
-  const BodyText({
+  const BodyText(
+    this.text, {
     super.key,
-    required this.text,
-    this.fontSize = 16.0,
-    this.lineHeight = 1.5,
-    this.fontWeight = FontWeight.normal,
-    this.color = Colors.black,
-    this.textAlign, // Initialize in default constructor
+    this.style,
+    this.color,
+    this.textAlign,
   });
 
-  const BodyText.large(
-    this.text, {
-    this.color = Colors.black,
-    this.fontWeight = FontWeight.normal,
-    this.textAlign, // Pass through named constructor
-    super.key,
-  })  : fontSize = 18.0,
-        lineHeight = 28.0 / 18.0;
+  /// Body Large: 18PX / 28PX LINE (Body Parrafo 01)
+  factory BodyText.large(
+    String text, {
+    Color? color,
+    FontWeight? fontWeight,
+    TextAlign? textAlign,
+    Key? key,
+  }) =>
+      BodyText(
+        text,
+        key: key,
+        textAlign: textAlign,
+        color: color,
+        style: TextStyle(
+          fontSize: 18,
+          height: 28 / 18,
+          fontWeight: fontWeight ?? FontWeight.normal,
+        ),
+      );
 
-  const BodyText.medium(
-    this.text, {
-    this.color = Colors.black,
-    this.fontWeight = FontWeight.normal,
-    this.textAlign, // Pass through named constructor
-    super.key,
-  })  : fontSize = 16.0,
-        lineHeight = 24.0 / 16.0;
+  /// Body Medium: 16PX / 24PX LINE (Body Parrafo 02)
+  factory BodyText.medium(
+    String text, {
+    Color? color,
+    FontWeight? fontWeight,
+    TextAlign? textAlign,
+    Key? key,
+  }) =>
+      BodyText(
+        text,
+        key: key,
+        textAlign: textAlign,
+        color: color,
+        style: TextStyle(
+          fontSize: 16,
+          height: 24 / 16,
+          fontWeight: fontWeight ?? FontWeight.normal,
+        ),
+      );
 
-  const BodyText.small(
-    this.text, {
-    this.color = Colors.black,
-    this.fontWeight = FontWeight.normal,
-    this.textAlign, // Pass through named constructor
-    super.key,
-  })  : fontSize = 14.0,
-        lineHeight = 20.0 / 14.0;
+  /// Body Small: 14PX / 20PX LINE (Body Parrafo 03)
+  factory BodyText.small(
+    String text, {
+    Color? color,
+    FontWeight? fontWeight,
+    TextAlign? textAlign,
+    Key? key,
+  }) =>
+      BodyText(
+        text,
+        key: key,
+        textAlign: textAlign,
+        color: color,
+        style: TextStyle(
+          fontSize: 14,
+          height: 20 / 14,
+          fontWeight: fontWeight ?? FontWeight.normal,
+        ),
+      );
 
-  const BodyText.tiny(
-    this.text, {
-    this.color = Colors.black,
-    this.fontWeight = FontWeight.normal,
-    this.textAlign, // Pass through named constructor
-    super.key,
-  })  : fontSize = 12.0,
-        lineHeight = 16.0 / 12.0;
+  /// Caption / Tiny: 12PX / 16PX LINE (Overline)
+  factory BodyText.tiny(
+    String text, {
+    Color? color,
+    FontWeight? fontWeight,
+    TextAlign? textAlign,
+    Key? key,
+  }) =>
+      BodyText(
+        text,
+        key: key,
+        textAlign: textAlign,
+        color: color,
+        style: TextStyle(
+          fontSize: 12,
+          height: 16 / 12,
+          fontWeight: fontWeight ?? FontWeight.normal,
+          // Note: Guide indicates Poppins for this specific size
+          fontFamily: 'Poppins', 
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Text(
       text,
-      textAlign: textAlign, // Applied to the Text widget
-      style: GoogleFonts.raleway(
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        color: color,
-        height: lineHeight,
+      textAlign: textAlign,
+      style: style?.copyWith(
+        color: color ?? theme.textTheme.bodyMedium?.color,
+        // Inherits Raleway from theme for Large/Medium/Small
+        fontFamily: style?.fontFamily ?? theme.textTheme.bodyMedium?.fontFamily,
       ),
     );
   }

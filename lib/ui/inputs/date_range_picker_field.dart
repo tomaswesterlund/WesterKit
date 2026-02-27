@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart'; // Add intl to your pubspec.yaml
+import 'package:intl/intl.dart';
 
 class DateRangePickerField extends StatelessWidget {
   final String label;
@@ -19,6 +18,8 @@ class DateRangePickerField extends StatelessWidget {
   });
 
   Future<void> _pickDateRange(BuildContext context) async {
+    final theme = Theme.of(context);
+
     final DateTimeRange? picked = await showDateRangePicker(
       context: context,
       firstDate: firstDate ?? DateTime.now(),
@@ -26,13 +27,12 @@ class DateRangePickerField extends StatelessWidget {
       initialDateRange: selectedRange,
       builder: (context, child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF1A4644), // Your brand teal
+          data: theme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(
+              primary: const Color(0xFF1A4644), // Brand teal
               onPrimary: Colors.white,
               onSurface: Colors.black87,
             ),
-            textTheme: GoogleFonts.ralewayTextTheme(),
           ),
           child: child!,
         );
@@ -46,7 +46,9 @@ class DateRangePickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final dateFormat = DateFormat('dd/MM/yyyy');
+
     final displayString = selectedRange == null
         ? label
         : '${dateFormat.format(selectedRange!.start)} - ${dateFormat.format(selectedRange!.end)}';
@@ -56,11 +58,8 @@ class DateRangePickerField extends StatelessWidget {
       borderRadius: BorderRadius.circular(20.0),
       child: InputDecorator(
         decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.calendar_today_rounded, size: 20),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 24.0,
-            vertical: 18.0,
-          ),
+          prefixIcon: const Icon(Icons.calendar_today_rounded, size: 20, color: Color(0xFF1A4644)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
             borderSide: BorderSide(color: Colors.grey.shade300),
@@ -78,9 +77,11 @@ class DateRangePickerField extends StatelessWidget {
         ),
         child: Text(
           displayString,
-          style: GoogleFonts.raleway(
+          style: theme.textTheme.bodyMedium?.copyWith(
             fontSize: 16.0,
             color: selectedRange == null ? Colors.grey.shade500 : Colors.black87,
+            // Numbers and dates use Noto Sans Mono per guide
+            fontFamily: selectedRange == null ? null : 'NotoSansMono',
           ),
         ),
       ),

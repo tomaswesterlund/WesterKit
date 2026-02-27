@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:wester_kit/ui/texts/body_text.dart';
+import 'package:wester_kit/ui/texts/header_text.dart';
 
 class PhoneNumberInputField extends StatelessWidget {
   final String label;
@@ -22,6 +23,8 @@ class PhoneNumberInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -31,15 +34,9 @@ class PhoneNumberInputField extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                label,
-                style: GoogleFonts.raleway(fontSize: 14.0, fontWeight: FontWeight.w600, color: const Color(0xFF1A4644)),
-              ),
-              if (isRequired)
-                Text(
-                  ' *',
-                  style: GoogleFonts.raleway(color: Colors.red, fontWeight: FontWeight.bold),
-                ),
+              // H6 Style (14px)
+              HeaderText.six(label, color: const Color(0xFF1A4644)),
+              if (isRequired) BodyText.small(' *', color: Colors.red, fontWeight: FontWeight.bold),
               if (helpText != null) ...[
                 const SizedBox(width: 6),
                 GestureDetector(
@@ -61,11 +58,12 @@ class PhoneNumberInputField extends StatelessWidget {
             LengthLimitingTextInputFormatter(10),
             PhoneInputFormatter(),
           ],
-          style: GoogleFonts.raleway(fontSize: 16.0, color: Colors.black87),
+          // Using Noto Sans Mono for numeric input per typography guide
+          style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black87, fontFamily: 'NotoSansMono'),
           decoration: InputDecoration(
             prefixIcon: const Icon(Icons.phone_outlined, color: Color(0xFF1A4644)),
             hintText: hint,
-            hintStyle: GoogleFonts.raleway(fontSize: 16.0, color: Colors.grey.shade400),
+            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade400, fontFamily: 'NotoSansMono'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
@@ -87,18 +85,17 @@ class PhoneNumberInputField extends StatelessWidget {
     );
   }
 
-  // --- Matching Help Dialog Logic ---
   void _showHelpDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(label, style: GoogleFonts.raleway(fontWeight: FontWeight.bold)),
-        content: Text(helpText!, style: GoogleFonts.raleway()),
+        title: HeaderText.three(label), // H3 Style
+        content: BodyText.medium(helpText!), // Body Medium Style
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Entendido', style: TextStyle(color: Color(0xFF1A4644))),
+            child: HeaderText.six('Entendido', color: Color(0xFF1A4644)),
           ),
         ],
       ),
@@ -110,7 +107,6 @@ class PhoneInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     final text = newValue.text;
-
     if (newValue.selection.baseOffset == 0) return newValue;
 
     final buffer = StringBuffer();

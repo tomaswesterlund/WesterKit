@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:wester_kit/ui/texts/header_text.dart';
 import 'package:wester_kit/wk_app_colors.dart';
 
 class FilterSelectorItem {
@@ -12,9 +12,8 @@ class FilterSelectorItem {
 class FilterSelector extends StatelessWidget {
   final List<FilterSelectorItem> options;
   final FilterSelectorItem selectedValue;
-  final Function(FilterSelectorItem) onSelected;
+  final ValueChanged<FilterSelectorItem> onSelected;
 
-  // Customization properties for WesterKit flexibility
   final Color backgroundColor;
   final Color selectedColor;
   final Color unselectedTextColor;
@@ -26,12 +25,11 @@ class FilterSelector extends StatelessWidget {
     required this.options,
     required this.selectedValue,
     required this.onSelected,
-    // Defaulting to WesterKit Brand Colors
     this.backgroundColor = WkAppColors.surface,
     this.selectedColor = WkAppColors.primary,
     this.unselectedTextColor = WkAppColors.textPrimary,
     this.selectedTextColor = WkAppColors.surface,
-    this.borderColor = WkAppColors.border, // Replaces auxiliarScale[100]
+    this.borderColor = WkAppColors.border,
   });
 
   @override
@@ -60,14 +58,11 @@ class FilterSelector extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24),
                 ),
                 alignment: Alignment.center,
-                child: Text(
+                // Using HeaderText.six (H6: 14px / 16 line)
+                child: HeaderText.six(
                   option.label,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.raleway(
-                    color: isSelected ? selectedTextColor : unselectedTextColor,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    fontSize: 14,
-                  ),
+                  color: isSelected ? selectedTextColor : unselectedTextColor,
                 ),
               ),
             ),
