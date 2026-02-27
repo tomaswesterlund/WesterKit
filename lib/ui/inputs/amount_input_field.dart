@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wester_kit/ui/texts/header_text.dart';
 import 'package:wester_kit/wk_app_colors.dart';
 
 class AmountInputField extends StatelessWidget {
@@ -38,11 +39,7 @@ class AmountInputField extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                label,
-                // Using H5 style from your typography guide (mapped to titleMedium)
-                style: textTheme.titleMedium?.copyWith(color: WkAppColors.primary),
-              ),
+              HeaderText.six(label, color: WkAppColors.textPrimary),
               if (isRequired)
                 Text(
                   ' *',
