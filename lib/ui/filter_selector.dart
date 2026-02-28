@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
 import 'package:wester_kit/wk_app_colors.dart';
 
-class FilterSelectorItem {
+class FilterSelectorItem<T> {
   final String label;
-  final dynamic value;
+  final T value;
 
   const FilterSelectorItem({required this.label, required this.value});
 }
 
-class FilterSelector extends StatelessWidget {
-  final List<FilterSelectorItem> options;
-  final FilterSelectorItem selectedValue;
-  final ValueChanged<FilterSelectorItem> onSelected;
+class FilterSelector<T> extends StatelessWidget {
+  final List<FilterSelectorItem<T>> options;
+  final FilterSelectorItem<T> selectedValue;
+  final ValueChanged<FilterSelectorItem<T>> onSelected;
 
   final Color backgroundColor;
   final Color selectedColor;
@@ -44,6 +44,7 @@ class FilterSelector extends StatelessWidget {
       ),
       child: Row(
         children: options.map((option) {
+          // Compare the items themselves or their values
           final isSelected = selectedValue == option;
 
           return Expanded(
@@ -58,7 +59,6 @@ class FilterSelector extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24),
                 ),
                 alignment: Alignment.center,
-                // Using HeaderText.six (H6: 14px / 16 line)
                 child: HeaderText.six(
                   option.label,
                   textAlign: TextAlign.center,
