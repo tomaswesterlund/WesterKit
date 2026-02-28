@@ -63,7 +63,6 @@ class FilterSelector extends StatelessWidget {
                   option.label,
                   textAlign: TextAlign.center,
                   color: isSelected ? selectedTextColor : unselectedTextColor,
-                  
                 ),
               ),
             ),
