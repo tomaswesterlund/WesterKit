@@ -73,7 +73,7 @@ class FloatingNavBar extends StatelessWidget {
                       Positioned(
                         top: 0,
                         right: 0,
-                        child: _BadgeIndicator(
+                        child: BadgeIndicator(
                           color: item.showDanger
                               ? dangerColor
                               : (item.warningBadgeCount > 0 ? warningColor : infoColor),
@@ -106,13 +106,13 @@ class FloatingNavBar extends StatelessWidget {
   }
 }
 
-class _BadgeIndicator extends StatelessWidget {
+class BadgeIndicator extends StatelessWidget {
   final Color color;
   final String text;
   final Color borderColor;
   final Color textColor;
 
-  const _BadgeIndicator({required this.color, required this.text, required this.borderColor, required this.textColor});
+  const BadgeIndicator({required this.color, required this.text, required this.borderColor, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
