@@ -80,7 +80,7 @@ class TextInputField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: readOnly ? Colors.grey.shade300 : const Color(0xFF1A4644), width: 2),
+              borderSide: BorderSide(color: readOnly ? Colors.grey.shade300 : WkAppColors.primary, width: 2),
             ),
             filled: true,
             fillColor: readOnly ? Colors.grey.shade100 : Colors.white,
@@ -100,7 +100,7 @@ class TextInputField extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: HeaderText.six('Entendido', color: Color(0xFF1A4644)),
+            child: HeaderText.six('Entendido', color: WkAppColors.primary),
           ),
         ],
       ),
