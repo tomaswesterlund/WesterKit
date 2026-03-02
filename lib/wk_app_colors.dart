@@ -12,18 +12,28 @@ class WkAppColors {
   static const Color divider = Color(0xFFEEEEEE);
   static const Color shadow = Color(0x1A000000);
 
-  // --- Primary Scale (Blue) ---
+// --- Primary Scale (Blue) ---
   static const Color primary50 = Color(0xFFE8EAF6);
   static const Color primary100 = Color(0xFFC5CAE9);
+  static const Color primary200 = Color(0xFF9FA8DA);
   static const Color primary300 = Color(0xFF7986CB);
+  static const Color primary400 = Color(0xFF5C6BC0);
+  static const Color primary500 = Color(0xFF3F51B5);
+  static const Color primary600 = Color(0xFF2A42AB);
   static const Color primary700 = Color(0xFF153699);
+  static const Color primary800 = Color(0xFF112B7C);
   static const Color primary900 = Color(0xFF0D215E);
 
   // --- Secondary Scale (Green) ---
   static const Color secondary50 = Color(0xFFE8F5E9);
   static const Color secondary100 = Color(0xFFC8E6C9);
+  static const Color secondary200 = Color(0xFFA5D6A7);
   static const Color secondary300 = Color(0xFF81C784);
+  static const Color secondary400 = Color(0xFF66BB6A);
+  static const Color secondary500 = Color(0xFF4CAF50);
+  static const Color secondary600 = Color(0xFF26B956);
   static const Color secondary700 = Color(0xFF00A343);
+  static const Color secondary800 = Color(0xFF008A38);
   static const Color secondary900 = Color(0xFF00702E);
 
   // Grey
