@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wester_kit/ui/buttons/success_button.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
 
@@ -28,43 +29,25 @@ class SuccessView extends StatelessWidget {
             // Green Checkmark Icon
             Container(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.green[50],
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.check_circle_rounded,
-                color: Colors.green[600],
-                size: 80,
-              ),
+              decoration: BoxDecoration(color: Colors.green[50], shape: BoxShape.circle),
+              child: Icon(Icons.check_circle_rounded, color: Colors.green[600], size: 80),
             ),
             const SizedBox(height: 24),
-      
+
             // Dynamic Text
             HeaderText.two(title),
             if (subtitle != null) ...[
               const SizedBox(height: 12),
-              BodyText.small(subtitle!, textAlign: TextAlign.center,),
+              BodyText.small(subtitle!, textAlign: TextAlign.center),
             ],
-      
+
             const SizedBox(height: 40),
-      
+
             // Optional action button (e.g., "Volver al inicio")
             if (onActionButtonPressed != null && actionButtonLabel != null)
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: onActionButtonPressed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[600],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(actionButtonLabel!),
-                ),
+                child: SuccessButton(label: actionButtonLabel!, onPressed: onActionButtonPressed),
               ),
           ],
         ),
