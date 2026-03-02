@@ -1,32 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
-import 'package:wester_kit/wk_app_colors.dart';
 
 class LoadingBar extends StatelessWidget {
   final String title;
   final String? description;
-  const LoadingBar({this.title = 'Cargando información...', this.description, super.key});
+  final Color? color;
+
+  const LoadingBar({
+    this.title = 'Cargando información...', 
+    this.description, 
+    this.color,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    // Resolve the progress bar color: 
+    // Priority (Constructor -> Secondary -> Primary)
+    final indicatorColor = color ?? colorScheme.secondary;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(
+          SizedBox(
             width: 120,
             child: LinearProgressIndicator(
-              backgroundColor: WkAppColors.background,
-              color: WkAppColors.secondary,
+              backgroundColor: colorScheme.outlineVariant.withOpacity(0.2),
+              color: indicatorColor,
               minHeight: 2,
+              borderRadius: BorderRadius.circular(1),
             ),
           ),
           const SizedBox(height: 24),
-          HeaderText.four(title, textAlign: TextAlign.center),
+          HeaderText.four(
+            title, 
+            textAlign: TextAlign.center, 
+            color: colorScheme.onSurface,
+          ),
           if (description != null) ...[
             const SizedBox(height: 8),
-            BodyText.small(description!, textAlign: TextAlign.center),
+            BodyText.small(
+              description!, 
+              textAlign: TextAlign.center, 
+              color: colorScheme.outline,
+            ),
           ],
         ],
       ),

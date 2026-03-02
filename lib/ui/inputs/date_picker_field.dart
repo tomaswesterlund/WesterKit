@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
-import 'package:wester_kit/wk_app_colors.dart';
 
 class DatePickerField extends StatelessWidget {
   final String label;
@@ -14,9 +13,9 @@ class DatePickerField extends StatelessWidget {
   final String? helpText;
   final Widget? prefixIcon;
 
-  // Custom Color properties
-  final Color primaryColor;
-  final Color borderColor;
+  // Optional Overrides
+  final Color? primaryColor;
+  final Color? borderColor;
 
   const DatePickerField({
     required this.label,
@@ -27,13 +26,14 @@ class DatePickerField extends StatelessWidget {
     this.isRequired = false,
     this.helpText,
     this.prefixIcon,
-    this.primaryColor = WkAppColors.primary, // Updated to Brand Primary
-    this.borderColor = WkAppColors.border, // Updated to Brand Border
+    this.primaryColor,
+    this.borderColor,
     super.key,
   });
 
   Future<void> _pickDate(BuildContext context) async {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -43,10 +43,10 @@ class DatePickerField extends StatelessWidget {
       builder: (context, child) {
         return Theme(
           data: theme.copyWith(
-            colorScheme: ColorScheme.light(
-              primary: primaryColor,
-              onPrimary: Colors.white,
-              onSurface: WkAppColors.textPrimary,
+            colorScheme: colorScheme.copyWith(
+              primary: primaryColor ?? colorScheme.primary, // Resipal Green
+              onPrimary: colorScheme.onPrimary, // White
+              onSurface: colorScheme.onSurface, // Text Primary
             ),
           ),
           child: child!,
@@ -62,8 +62,14 @@ class DatePickerField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     final dateFormat = DateFormat('dd/MM/yyyy');
     final displayString = selectedDate == null ? 'Seleccionar fecha' : dateFormat.format(selectedDate!);
+
+    // Resolve Colors
+    final activePrimary = primaryColor ?? colorScheme.primary;
+    final activeBorder = borderColor ?? colorScheme.outlineVariant;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,14 +80,14 @@ class DatePickerField extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // H6 Style (14px Bold) per typography guide
-              HeaderText.six(label, color: WkAppColors.textPrimary),
-              if (isRequired) BodyText.small(' *', color: WkAppColors.danger, fontWeight: FontWeight.bold),
+              HeaderText.six(label, color: colorScheme.onSurface),
+              if (isRequired) 
+                BodyText.small(' *', color: colorScheme.error, fontWeight: FontWeight.bold),
               if (helpText != null) ...[
                 const SizedBox(width: 6),
                 GestureDetector(
                   onTap: () => _showHelpDialog(context),
-                  child: const Icon(Icons.help_outline_rounded, size: 16, color: WkAppColors.grey500),
+                  child: Icon(Icons.help_outline_rounded, size: 16, color: colorScheme.outline),
                 ),
               ],
             ],
@@ -94,28 +100,24 @@ class DatePickerField extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
           child: InputDecorator(
             decoration: InputDecoration(
-              prefixIcon: prefixIcon ?? Icon(Icons.calendar_month_rounded, size: 20, color: primaryColor),
+              prefixIcon: prefixIcon ?? Icon(Icons.calendar_month_rounded, size: 20, color: activePrimary),
               contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: BorderSide(color: borderColor),
-              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
-                borderSide: BorderSide(color: borderColor),
+                borderSide: BorderSide(color: activeBorder),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
-                borderSide: BorderSide(color: primaryColor, width: 2),
+                borderSide: BorderSide(color: activePrimary, width: 2),
               ),
               filled: true,
-              fillColor: WkAppColors.surface,
+              fillColor: colorScheme.surface,
             ),
             child: Text(
               displayString,
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontSize: 16.0,
-                color: selectedDate == null ? WkAppColors.grey500 : WkAppColors.textPrimary,
+                color: selectedDate == null ? colorScheme.outline : colorScheme.onSurface,
                 fontFamily: selectedDate == null ? null : 'NotoSansMono',
               ),
             ),
@@ -126,6 +128,7 @@ class DatePickerField extends StatelessWidget {
   }
 
   void _showHelpDialog(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -135,7 +138,7 @@ class DatePickerField extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: HeaderText.six('Entendido', color: primaryColor),
+            child: HeaderText.six('Entendido', color: primaryColor ?? colorScheme.primary),
           ),
         ],
       ),

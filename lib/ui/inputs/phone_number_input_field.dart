@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
-import 'package:wester_kit/wk_app_colors.dart';
 
 class PhoneNumberInputField extends StatelessWidget {
   final String label;
@@ -25,6 +24,7 @@ class PhoneNumberInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,13 +35,14 @@ class PhoneNumberInputField extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              BodyText.medium(label, color: WkAppColors.textPrimary),
-              if (isRequired) BodyText.small(' *', color: Colors.red, fontWeight: FontWeight.bold),
+              BodyText.medium(label, color: colorScheme.onSurface),
+              if (isRequired) 
+                BodyText.small(' *', color: colorScheme.error, fontWeight: FontWeight.bold),
               if (helpText != null) ...[
                 const SizedBox(width: 6),
                 GestureDetector(
                   onTap: () => _showHelpDialog(context),
-                  child: Icon(Icons.help_outline_rounded, size: 16, color: Colors.grey.shade600),
+                  child: Icon(Icons.help_outline_rounded, size: 16, color: colorScheme.outline),
                 ),
               ],
             ],
@@ -58,27 +59,28 @@ class PhoneNumberInputField extends StatelessWidget {
             LengthLimitingTextInputFormatter(10),
             PhoneInputFormatter(),
           ],
-          // Using Noto Sans Mono for numeric input per typography guide
-          style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black87, fontFamily: 'NotoSansMono'),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurface, 
+            fontFamily: 'NotoSansMono',
+          ),
           decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.phone_outlined, color: Color(0xFF1A4644)),
+            prefixIcon: Icon(Icons.phone_outlined, color: colorScheme.primary),
             hintText: hint,
-            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade400, fontFamily: 'NotoSansMono'),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+            hintStyle: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.outline, 
+              fontFamily: 'NotoSansMono',
             ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
+            filled: true,
+            fillColor: colorScheme.surface,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderSide: BorderSide(color: colorScheme.outlineVariant),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: const BorderSide(color: Color(0xFF1A4644), width: 2),
+              borderSide: BorderSide(color: colorScheme.primary, width: 2),
             ),
-            filled: true,
-            fillColor: Colors.white,
           ),
         ),
       ],
@@ -86,16 +88,17 @@ class PhoneNumberInputField extends StatelessWidget {
   }
 
   void _showHelpDialog(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: HeaderText.three(label), // H3 Style
-        content: BodyText.medium(helpText!), // Body Medium Style
+        title: HeaderText.three(label),
+        content: BodyText.medium(helpText!),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: HeaderText.six('Entendido', color: Color(0xFF1A4644)),
+            child: HeaderText.six('Entendido', color: colorScheme.primary),
           ),
         ],
       ),
@@ -110,6 +113,7 @@ class PhoneInputFormatter extends TextInputFormatter {
     if (newValue.selection.baseOffset == 0) return newValue;
 
     final buffer = StringBuffer();
+    // Simplified logic: format digits as (XXX) XXX-XXXX
     for (int i = 0; i < text.length; i++) {
       if (i == 0) buffer.write('(');
       if (i == 3) buffer.write(') ');

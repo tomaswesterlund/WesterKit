@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
-import 'package:wester_kit/ui/texts/header_text.dart';
-import 'package:wester_kit/wk_app_colors.dart';
 
 class EmailInputField extends StatelessWidget {
   final String label;
@@ -22,14 +20,15 @@ class EmailInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // --- Label using H6 spec ---
+        // --- Label Row ---
         Padding(
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: BodyText.medium(label, color: WkAppColors.textPrimary),
+          child: BodyText.medium(label, color: colorScheme.onSurface),
         ),
 
         TextFormField(
@@ -39,8 +38,9 @@ class EmailInputField extends StatelessWidget {
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
 
-          // Using Theme's bodyMedium (16px / 24 line) for input text
-          style: theme.textTheme.bodyMedium?.copyWith(color: enabled ? Colors.black87 : Colors.grey.shade600),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: enabled ? colorScheme.onSurface : colorScheme.outline,
+          ),
 
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -53,29 +53,36 @@ class EmailInputField extends StatelessWidget {
           },
 
           decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF1A4644)),
+            prefixIcon: Icon(Icons.email_outlined, color: colorScheme.primary),
             hintText: hint,
-            // Using Theme's bodyMedium for hint
-            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade400),
+            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
+            
+            // Standard Borders
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderSide: BorderSide(color: colorScheme.outlineVariant),
             ),
+            
+            // Focus Border (Resipal Green)
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: const BorderSide(color: Color(0xFF1A4644), width: 2),
+              borderSide: BorderSide(color: colorScheme.primary, width: 2),
             ),
+            
+            // Error Border (Resipal Danger/Terracotta)
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: const BorderSide(color: Colors.redAccent, width: 1),
+              borderSide: BorderSide(color: colorScheme.error, width: 1.5),
             ),
+            
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(color: colorScheme.error, width: 2),
+            ),
+
             filled: true,
-            fillColor: enabled ? Colors.white : Colors.grey.shade50,
+            fillColor: enabled ? colorScheme.surface : colorScheme.surfaceVariant,
           ),
         ),
       ],
