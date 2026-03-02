@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
-import 'package:wester_kit/ui/texts/header_text.dart';
-import 'package:wester_kit/wk_app_colors.dart';
 
 class AmountInputField extends StatelessWidget {
   final String label;
@@ -29,6 +27,7 @@ class AmountInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Column(
@@ -40,17 +39,24 @@ class AmountInputField extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              BodyText.medium(label, color: WkAppColors.textPrimary),
+              BodyText.medium(label, color: colorScheme.onSurface),
               if (isRequired)
                 Text(
                   ' *',
-                  style: textTheme.titleMedium?.copyWith(color: WkAppColors.danger, fontWeight: FontWeight.bold),
+                  style: textTheme.titleMedium?.copyWith(
+                    color: colorScheme.error, 
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               if (helpText != null) ...[
                 const SizedBox(width: 6),
                 GestureDetector(
-                  onTap: () => _showHelpDialog(context, textTheme),
-                  child: const Icon(Icons.help_outline_rounded, size: 16, color: WkAppColors.textSecondary),
+                  onTap: () => _showHelpDialog(context),
+                  child: Icon(
+                    Icons.help_outline_rounded, 
+                    size: 16, 
+                    color: colorScheme.outline,
+                  ),
                 ),
               ],
             ],
@@ -68,12 +74,12 @@ class AmountInputField extends StatelessWidget {
             }
           },
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))],
-          // Numeric content: Use Noto Sans Mono if configured in theme,
-          // otherwise inherit Body Medium/Large scaling
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+          ],
           style: textTheme.bodyLarge?.copyWith(
-            color: readOnly ? WkAppColors.textSecondary : WkAppColors.textPrimary,
-            fontFamily: 'NotoSansMono', // Applying the numeric family from your guide
+            color: readOnly ? colorScheme.outline : colorScheme.onSurface,
+            fontFamily: 'NotoSansMono', // Keeping your numeric font preference
           ),
           decoration: InputDecoration(
             hintText: hint,
@@ -81,20 +87,27 @@ class AmountInputField extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 currencySymbol,
-                style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: WkAppColors.textSecondary),
+                style: textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold, 
+                  color: colorScheme.outline,
+                ),
               ),
             ),
-            hintStyle: textTheme.bodyLarge?.copyWith(color: WkAppColors.hint),
+            hintStyle: textTheme.bodyLarge?.copyWith(color: colorScheme.outline),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
             filled: true,
-            fillColor: readOnly ? WkAppColors.grey100 : WkAppColors.surface,
+            // Uses a standard surface color or a light variant when read-only
+            fillColor: readOnly ? colorScheme.surfaceVariant : colorScheme.surface,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: const BorderSide(color: WkAppColors.grey200),
+              borderSide: BorderSide(color: colorScheme.outlineVariant),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: readOnly ? WkAppColors.grey200 : WkAppColors.primary, width: 2),
+              borderSide: BorderSide(
+                color: readOnly ? colorScheme.outlineVariant : colorScheme.primary, 
+                width: 2,
+              ),
             ),
           ),
         ),
@@ -102,19 +115,28 @@ class AmountInputField extends StatelessWidget {
     );
   }
 
-  void _showHelpDialog(BuildContext context, TextTheme textTheme) {
+  void _showHelpDialog(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(label, style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-        content: Text(helpText!, style: textTheme.bodyMedium),
+        title: Text(
+          label, 
+          style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        content: Text(helpText!, style: theme.textTheme.bodyMedium),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Entendido',
-              style: textTheme.labelLarge?.copyWith(color: WkAppColors.primary, fontWeight: FontWeight.bold),
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: colorScheme.primary, 
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],

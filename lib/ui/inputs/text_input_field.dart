@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
-import 'package:wester_kit/wk_app_colors.dart';
 
 class TextInputField extends StatelessWidget {
   final String label;
@@ -32,6 +31,7 @@ class TextInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,13 +42,14 @@ class TextInputField extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              BodyText.medium(label, color: WkAppColors.textPrimary),
-              if (isRequired) BodyText.small(' *', color: Colors.red, fontWeight: FontWeight.bold),
+              BodyText.medium(label, color: colorScheme.onSurface),
+              if (isRequired) 
+                BodyText.small(' *', color: colorScheme.error, fontWeight: FontWeight.bold),
               if (helpText != null) ...[
                 const SizedBox(width: 6),
                 GestureDetector(
                   onTap: () => _showHelpDialog(context),
-                  child: Icon(Icons.help_outline_rounded, size: 16, color: Colors.grey.shade600),
+                  child: Icon(Icons.help_outline_rounded, size: 16, color: colorScheme.outline),
                 ),
               ],
             ],
@@ -62,28 +63,32 @@ class TextInputField extends StatelessWidget {
           keyboardType: keyboardType,
           maxLines: maxLines,
           readOnly: readOnly,
-          // Body Medium (16px) for input text
-          style: theme.textTheme.bodyMedium?.copyWith(color: readOnly ? Colors.grey.shade600 : Colors.black87),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: readOnly ? colorScheme.outline : colorScheme.onSurface,
+          ),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: prefixIcon,
-            // Body Medium for hint text
-            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey.shade500),
+            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
+            
+            // Standard Border (Grey)
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderSide: BorderSide(color: colorScheme.outlineVariant),
             ),
+            
+            // Focus Border (Resipal Green!)
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: readOnly ? Colors.grey.shade300 : WkAppColors.primary, width: 2),
+              borderSide: BorderSide(
+                color: readOnly ? colorScheme.outlineVariant : colorScheme.primary, 
+                width: 2,
+              ),
             ),
+            
             filled: true,
-            fillColor: readOnly ? Colors.grey.shade100 : Colors.white,
+            fillColor: readOnly ? colorScheme.surfaceVariant : colorScheme.surface,
           ),
         ),
       ],
@@ -91,16 +96,18 @@ class TextInputField extends StatelessWidget {
   }
 
   void _showHelpDialog(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: HeaderText.three(label), // H3 for Dialog titles
-        content: BodyText.medium(helpText!), // Body Medium for content
+        title: HeaderText.three(label),
+        content: BodyText.medium(helpText!),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: HeaderText.six('Entendido', color: WkAppColors.primary),
+            child: HeaderText.six('Entendido', color: colorScheme.primary),
           ),
         ],
       ),

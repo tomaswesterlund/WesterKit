@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:wester_kit/lib.dart';
-import 'package:wester_kit/wk_app_colors.dart';
 
 class EntityDropdownField<T> extends StatelessWidget {
   final String label;
   final T? value;
   final List<T> items;
-  final String Function(T) itemLabelBuilder; // The logic to show the name
+  final String Function(T) itemLabelBuilder;
   final ValueChanged<T?> onChanged;
   final bool isRequired;
   final String? helpText;
@@ -24,6 +23,9 @@ class EntityDropdownField<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -33,17 +35,17 @@ class EntityDropdownField<T> extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              BodyText.medium(label, color: WkAppColors.textPrimary),
+              BodyText.medium(label, color: colorScheme.onSurface),
               if (isRequired)
-                const Text(
+                Text(
                   ' *',
-                  style: TextStyle(color: WkAppColors.danger, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: colorScheme.error, fontWeight: FontWeight.bold),
                 ),
               if (helpText != null) ...[
                 const SizedBox(width: 6),
                 GestureDetector(
                   onTap: () => _showHelpDialog(context),
-                  child: const Icon(Icons.help_outline_rounded, size: 16, color: WkAppColors.hint),
+                  child: Icon(Icons.help_outline_rounded, size: 16, color: colorScheme.outline),
                 ),
               ],
             ],
@@ -55,20 +57,20 @@ class EntityDropdownField<T> extends StatelessWidget {
           value: value,
           onChanged: onChanged,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: WkAppColors.hint),
-          dropdownColor: WkAppColors.surface,
-          style: const TextStyle(color: WkAppColors.textPrimary, fontSize: 16),
+          icon: Icon(Icons.keyboard_arrow_down_rounded, color: colorScheme.outline),
+          dropdownColor: colorScheme.surface,
+          style: theme.textTheme.bodyLarge?.copyWith(color: colorScheme.onSurface),
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
             filled: true,
-            fillColor: WkAppColors.surface,
+            fillColor: colorScheme.surface,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
-              borderSide: const BorderSide(color: WkAppColors.grey200),
+              borderSide: BorderSide(color: colorScheme.outlineVariant),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
-              borderSide: const BorderSide(color: WkAppColors.primary, width: 2),
+              borderSide: BorderSide(color: colorScheme.primary, width: 2),
             ),
           ),
           items: items.map((T item) {
@@ -85,6 +87,8 @@ class EntityDropdownField<T> extends StatelessWidget {
   }
 
   void _showHelpDialog(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -94,7 +98,7 @@ class EntityDropdownField<T> extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Entendido', style: TextStyle(color: WkAppColors.primary)),
+            child: Text('Entendido', style: TextStyle(color: colorScheme.primary)),
           ),
         ],
       ),
