@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
+import 'package:wester_kit/ui/texts/header_text.dart';
 
 class EmailInputField extends StatelessWidget {
   final String label;
   final String hint;
   final String? initialValue;
-  final bool enabled;
   final Function(String)? onChanged;
+  final bool isRequired;
+  final String? helpText;
+  final bool readOnly;
 
   const EmailInputField({
     required this.label,
-    this.hint = "example@email.com",
+    this.hint = "ejemplo@correo.com",
     this.initialValue,
-    this.enabled = true,
     this.onChanged,
+    this.isRequired = false,
+    this.helpText,
+    this.readOnly = false,
     super.key,
   });
 
@@ -25,26 +30,42 @@ class EmailInputField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // --- Label Row ---
+        // --- Label Row (Synchronized with TextInputField) ---
         Padding(
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: BodyText.medium(label, color: colorScheme.onSurface),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              BodyText.medium(label, color: colorScheme.onSurface),
+              if (isRequired) 
+                BodyText.small(' *', color: colorScheme.error, fontWeight: FontWeight.bold),
+              if (helpText != null) ...[
+                const SizedBox(width: 6),
+                GestureDetector(
+                  onTap: () => _showHelpDialog(context),
+                  child: Icon(Icons.help_outline_rounded, size: 16, color: colorScheme.outline),
+                ),
+              ],
+            ],
+          ),
         ),
 
+        // --- Input Field ---
         TextFormField(
           initialValue: initialValue,
-          enabled: enabled,
           onChanged: onChanged,
+          readOnly: readOnly,
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
-
+          
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: enabled ? colorScheme.onSurface : colorScheme.outline,
+            color: readOnly ? colorScheme.outline : colorScheme.onSurface,
           ),
 
+          // Email Specific Validation
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Por favor ingresa tu correo';
+              return 'Por favor ingresa un correo';
             }
             final bool emailValid = RegExp(
               r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
@@ -53,39 +74,60 @@ class EmailInputField extends StatelessWidget {
           },
 
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.email_outlined, color: colorScheme.primary),
             hintText: hint,
+            prefixIcon: Icon(Icons.email_outlined, color: colorScheme.primary, size: 20),
             hintStyle: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
             
-            // Standard Borders
+            // Standard Border
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(color: colorScheme.outlineVariant),
             ),
             
-            // Focus Border (Resipal Green)
+            // Focus Border
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: colorScheme.primary, width: 2),
+              borderSide: BorderSide(
+                color: readOnly ? colorScheme.outlineVariant : colorScheme.primary, 
+                width: 2,
+              ),
             ),
-            
-            // Error Border (Resipal Danger/Terracotta)
+
+            // Error Borders
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(color: colorScheme.error, width: 1.5),
             ),
-            
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(color: colorScheme.error, width: 2),
             ),
-
+            
             filled: true,
-            fillColor: enabled ? colorScheme.surface : colorScheme.surfaceVariant,
+            fillColor: readOnly ? colorScheme.surfaceVariant : colorScheme.surface,
           ),
         ),
       ],
+    );
+  }
+
+  void _showHelpDialog(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: HeaderText.three(label),
+        content: BodyText.medium(helpText!),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: HeaderText.six('Entendido', color: colorScheme.primary),
+          ),
+        ],
+      ),
     );
   }
 }
