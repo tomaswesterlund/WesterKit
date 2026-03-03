@@ -32,16 +32,14 @@ class CheckboxField extends StatelessWidget {
                 SizedBox(
                   height: 24,
                   width: 24,
-                  child: IgnorePointer(
-                    child: Checkbox(
-                      value: value,
-                      onChanged: (value) => onChanged(value),
-                      activeColor: colorScheme.primary,
-                      checkColor: colorScheme.onPrimary,
-                      side: BorderSide(color: colorScheme.outline, width: 1.5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
+                  child: Checkbox(
+                    value: value,
+                    onChanged: (value) => onChanged(value),
+                    activeColor: colorScheme.primary,
+                    checkColor: colorScheme.onPrimary,
+                    side: BorderSide(color: colorScheme.outline, width: 1.5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
                     ),
                   ),
                 ),
