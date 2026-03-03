@@ -3,8 +3,8 @@ import 'package:wester_kit/ui/texts/header_text.dart';
 
 class InputLabel extends StatelessWidget {
   final String label;
-  final String? description;
-  final String? helpText;
+  final String? description; // Optional detailed body text
+  final String? helpText; // Optional info icon text
   final bool isRequired;
 
   const InputLabel({required this.label, this.description, this.helpText, this.isRequired = false, super.key});
@@ -17,27 +17,27 @@ class InputLabel extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Row for Label + Required Indicator + Help Icon
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             HeaderText.six(label, color: colorScheme.primary),
             if (isRequired)
-              Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: Text(
-                  '*',
-                  style: theme.textTheme.titleMedium?.copyWith(color: colorScheme.error, fontWeight: FontWeight.bold),
-                ),
+              Text(
+                ' *',
+                style: theme.textTheme.titleMedium?.copyWith(color: colorScheme.error, fontWeight: FontWeight.bold),
               ),
             if (helpText != null) ...[
               const SizedBox(width: 8),
               GestureDetector(
-                onTap: () => _showHelpDialog(context),
+                onTap: () => _showHelpDialog(context, theme),
                 child: Icon(Icons.help_outline_rounded, size: 18, color: colorScheme.outline),
               ),
             ],
           ],
         ),
+
+        // Optional Description (The "Body" text below the header)
         if (description != null) ...[
           const SizedBox(height: 6.0),
           Text(
@@ -49,12 +49,13 @@ class InputLabel extends StatelessWidget {
     );
   }
 
-  void _showHelpDialog(BuildContext context) {
+  void _showHelpDialog(BuildContext context, ThemeData theme) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(label),
-        content: Text(helpText!),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Text(label, style: theme.textTheme.titleLarge),
+        content: Text(helpText!, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface)),
         actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Entendido'))],
       ),
     );
