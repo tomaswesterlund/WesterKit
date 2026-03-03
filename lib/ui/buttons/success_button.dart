@@ -21,26 +21,27 @@ class SuccessButton extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
-    // Determine if the button should actually be clickable
     final bool isEnabled = canSubmit && !isSubmitting && onPressed != null;
 
-    // Use tertiary or a custom success color from the scheme
-    // If your ColorScheme mapping has 'success' colors, we use those here
-    final baseColor = colorScheme.tertiaryContainer.withOpacity(1.0).value == colorScheme.surface.value 
-        ? Colors.green.shade700 // Fallback if tertiary isn't set
-        : colorScheme.tertiary; 
+    // We now rely on the Tertiary mapping in the theme
+    final baseColor = colorScheme.tertiary; 
+    final onColor = colorScheme.onTertiary;
 
     return ElevatedButton(
       onPressed: isEnabled ? onPressed : null,
       style: ElevatedButton.styleFrom(
+        // Background logic: uses tertiary if enabled, otherwise a faded version
         backgroundColor: baseColor,
-        foregroundColor: colorScheme.onTertiary,
-        disabledBackgroundColor: baseColor.withOpacity(0.3),
-        disabledForegroundColor: colorScheme.onTertiary.withOpacity(0.6),
-        elevation: isEnabled ? 4 : 0,
-        shadowColor: colorScheme.shadow.withOpacity(0.2),
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 32),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        foregroundColor: onColor,
+        disabledBackgroundColor: baseColor.withOpacity(0.4),
+        disabledForegroundColor: onColor.withOpacity(0.7),
+        
+        elevation: isEnabled ? 2 : 0,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        
+        // This ensures the button grows to fill its container if needed
+        minimumSize: const Size(120, 54), 
       ),
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
@@ -49,25 +50,23 @@ class SuccessButton extends StatelessWidget {
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onTertiary),
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(onColor),
                 ),
               )
             : Row(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (icon != null) ...[
                     Icon(icon, size: 20), 
-                    const SizedBox(width: 8)
+                    const SizedBox(width: 10)
                   ],
                   Text(
-                    label, 
+                    label.toUpperCase(), // Professional admin-style
                     style: theme.textTheme.labelLarge?.copyWith(
-                      fontSize: 16, 
-                      fontWeight: FontWeight.bold, 
-                      letterSpacing: 1.1,
-                      color: isEnabled ? colorScheme.onTertiary : colorScheme.onTertiary.withOpacity(0.6),
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
+                      color: onColor,
                     ),
                   ),
                 ],
