@@ -30,6 +30,7 @@ export 'ui/inputs/images/image_picker_field.dart';
 export 'ui/inputs/images/network_image_preview.dart';
 export 'ui/inputs/images/picker_tile.dart';
 export 'ui/inputs/images/x_file_image_preview.dart';
+export 'ui/inputs/input_label.dart';
 export 'ui/inputs/phone_number_input_field.dart';
 export 'ui/inputs/text_input_field.dart';
 export 'ui/my_app_bar.dart';
