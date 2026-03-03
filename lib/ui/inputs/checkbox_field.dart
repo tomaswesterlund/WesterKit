@@ -23,7 +23,7 @@ class CheckboxField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
-          onTap: () => onChanged(value),
+          onTap: () => onChanged(!value),
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
