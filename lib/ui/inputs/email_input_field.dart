@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wester_kit/ui/inputs/input_label.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
 
@@ -30,24 +31,9 @@ class EmailInputField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // --- Label Row (Synchronized with TextInputField) ---
         Padding(
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              BodyText.medium(label, color: colorScheme.onSurface),
-              if (isRequired) 
-                BodyText.small(' *', color: colorScheme.error, fontWeight: FontWeight.bold),
-              if (helpText != null) ...[
-                const SizedBox(width: 6),
-                GestureDetector(
-                  onTap: () => _showHelpDialog(context),
-                  child: Icon(Icons.help_outline_rounded, size: 16, color: colorScheme.outline),
-                ),
-              ],
-            ],
-          ),
+          child: InputLabel(label: label, isRequired: isRequired, helpText: helpText),
         ),
 
         // --- Input Field ---
@@ -57,10 +43,8 @@ class EmailInputField extends StatelessWidget {
           readOnly: readOnly,
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
-          
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: readOnly ? colorScheme.outline : colorScheme.onSurface,
-          ),
+
+          style: theme.textTheme.bodyMedium?.copyWith(color: readOnly ? colorScheme.outline : colorScheme.onSurface),
 
           // Email Specific Validation
           validator: (value) {
@@ -78,20 +62,17 @@ class EmailInputField extends StatelessWidget {
             prefixIcon: Icon(Icons.email_outlined, color: colorScheme.primary, size: 20),
             hintStyle: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
-            
+
             // Standard Border
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(color: colorScheme.outlineVariant),
             ),
-            
+
             // Focus Border
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: readOnly ? colorScheme.outlineVariant : colorScheme.primary, 
-                width: 2,
-              ),
+              borderSide: BorderSide(color: readOnly ? colorScheme.outlineVariant : colorScheme.primary, width: 2),
             ),
 
             // Error Borders
@@ -103,7 +84,7 @@ class EmailInputField extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(color: colorScheme.error, width: 2),
             ),
-            
+
             filled: true,
             fillColor: readOnly ? colorScheme.surfaceVariant : colorScheme.surface,
           ),
@@ -114,7 +95,7 @@ class EmailInputField extends StatelessWidget {
 
   void _showHelpDialog(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

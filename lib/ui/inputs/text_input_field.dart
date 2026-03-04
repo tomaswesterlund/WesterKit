@@ -37,31 +37,15 @@ class TextInputField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InputLabel(
-          label: label,
-          isRequired: isRequired,
-          helpText: helpText,
-          
-          ),
-        // --- Label Row ---
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-        //   child: Row(
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: [
-        //       BodyText.medium(label, color: colorScheme.onSurface),
-        //       if (isRequired) 
-        //         BodyText.small(' *', color: colorScheme.error, fontWeight: FontWeight.bold),
-        //       if (helpText != null) ...[
-        //         const SizedBox(width: 6),
-        //         GestureDetector(
-        //           onTap: () => _showHelpDialog(context),
-        //           child: Icon(Icons.help_outline_rounded, size: 16, color: colorScheme.outline),
-        //         ),
-        //       ],
-        //     ],
-        //   ),
-        // ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+          child: InputLabel(
+            label: label,
+            isRequired: isRequired,
+            helpText: helpText,
+            
+            ),
+        ),
 
         // --- Input Field ---
         TextFormField(
