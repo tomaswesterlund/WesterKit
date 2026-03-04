@@ -24,7 +24,7 @@ class SuccessButton extends StatelessWidget {
     final bool isEnabled = canSubmit && !isSubmitting && onPressed != null;
 
     // We now rely on the Tertiary mapping in the theme
-    final baseColor = Colors.green[50]!; 
+    final baseColor = colorScheme.tertiary; 
     final onColor = colorScheme.onTertiary;
 
     return ElevatedButton(
