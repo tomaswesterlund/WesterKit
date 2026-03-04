@@ -10,7 +10,7 @@ class EmailInputField extends StatelessWidget {
   final Function(String)? onChanged;
   final bool isRequired;
   final String? helpText;
-  final bool readOnly;
+  final bool isReadonly; // Renamed for consistency
 
   const EmailInputField({
     required this.label,
@@ -19,7 +19,7 @@ class EmailInputField extends StatelessWidget {
     this.onChanged,
     this.isRequired = false,
     this.helpText,
-    this.readOnly = false,
+    this.isReadonly = false, // Default to false
     super.key,
   });
 
@@ -40,14 +40,18 @@ class EmailInputField extends StatelessWidget {
         TextFormField(
           initialValue: initialValue,
           onChanged: onChanged,
-          readOnly: readOnly,
+          readOnly: isReadonly, // Maps to the TextFormField property
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
 
-          style: theme.textTheme.bodyMedium?.copyWith(color: readOnly ? colorScheme.outline : colorScheme.onSurface),
+          // Dim text color if readonly
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: isReadonly ? colorScheme.onSurfaceVariant.withOpacity(0.7) : colorScheme.onSurface,
+          ),
 
           // Email Specific Validation
           validator: (value) {
+            if (isReadonly) return null; // Skip validation if readonly
             if (value == null || value.isEmpty) {
               return 'Por favor ingresa un correo';
             }
@@ -59,7 +63,11 @@ class EmailInputField extends StatelessWidget {
 
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: Icon(Icons.email_outlined, color: colorScheme.primary, size: 20),
+            prefixIcon: Icon(
+              Icons.email_outlined,
+              color: isReadonly ? colorScheme.outline : colorScheme.primary,
+              size: 20,
+            ),
             hintStyle: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
 
@@ -69,10 +77,13 @@ class EmailInputField extends StatelessWidget {
               borderSide: BorderSide(color: colorScheme.outlineVariant),
             ),
 
-            // Focus Border
+            // Focus Border - prevents primary color highlight when readonly
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: readOnly ? colorScheme.outlineVariant : colorScheme.primary, width: 2),
+              borderSide: BorderSide(
+                color: isReadonly ? colorScheme.outlineVariant : colorScheme.primary,
+                width: isReadonly ? 1 : 2,
+              ),
             ),
 
             // Error Borders
@@ -86,7 +97,8 @@ class EmailInputField extends StatelessWidget {
             ),
 
             filled: true,
-            fillColor: readOnly ? colorScheme.surfaceVariant : colorScheme.surface,
+            // Slightly darker fill color for readonly state
+            fillColor: isReadonly ? colorScheme.surfaceVariant.withOpacity(0.5) : colorScheme.surface,
           ),
         ),
       ],
