@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wester_kit/ui/inputs/input_label.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
 
@@ -29,24 +30,9 @@ class PhoneNumberInputField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // --- Consistent Label Row ---
         Padding(
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              BodyText.medium(label, color: colorScheme.onSurface),
-              if (isRequired) 
-                BodyText.small(' *', color: colorScheme.error, fontWeight: FontWeight.bold),
-              if (helpText != null) ...[
-                const SizedBox(width: 6),
-                GestureDetector(
-                  onTap: () => _showHelpDialog(context),
-                  child: Icon(Icons.help_outline_rounded, size: 16, color: colorScheme.outline),
-                ),
-              ],
-            ],
-          ),
+          child: InputLabel(label: label, isRequired: isRequired, helpText: helpText),
         ),
 
         // --- Standardized TextFormField ---
@@ -59,17 +45,11 @@ class PhoneNumberInputField extends StatelessWidget {
             LengthLimitingTextInputFormatter(10),
             PhoneInputFormatter(),
           ],
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurface, 
-            fontFamily: 'NotoSansMono',
-          ),
+          style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface, fontFamily: 'NotoSansMono'),
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.phone_outlined, color: colorScheme.primary),
             hintText: hint,
-            hintStyle: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.outline, 
-              fontFamily: 'NotoSansMono',
-            ),
+            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.outline, fontFamily: 'NotoSansMono'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
             filled: true,
             fillColor: colorScheme.surface,
