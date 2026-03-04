@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-/// A clean, structured tile for displaying labeled data points.
-/// Part of the WesterKit library.
 class DetailTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
   final Color? color;
+  final bool enableCopy;
 
-  const DetailTile({super.key, required this.icon, required this.label, required this.value, this.color});
+  const DetailTile({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.color,
+    this.enableCopy = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Falls back to the theme's colorScheme.secondary if no color is provided.
-    // This is the standard way to replace "BaseAppColors.secondary"
-    final Color iconColor = color ?? Theme.of(context).colorScheme.secondary;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final Color iconColor = color ?? colorScheme.secondary;
 
     return ListTile(
-      contentPadding: EdgeInsets.zero, // Often better for custom UI alignment
+      contentPadding: EdgeInsets.zero,
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(color: iconColor.withOpacity(0.1), shape: BoxShape.circle),
@@ -25,16 +32,34 @@ class DetailTile extends StatelessWidget {
       ),
       title: Text(
         label.toUpperCase(),
-        style: TextStyle(
-          fontSize: 10,
-          color: Theme.of(context).hintColor,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 0.5,
-        ),
+        style: TextStyle(fontSize: 10, color: theme.hintColor, fontWeight: FontWeight.bold, letterSpacing: 0.5),
       ),
       subtitle: Text(
         value,
-        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black87),
+        style: theme.textTheme.bodyLarge?.copyWith(
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+          color: colorScheme.onSurface.withOpacity(0.87),
+        ),
+      ),
+      trailing: enableCopy
+          ? IconButton(
+              icon: Icon(Icons.copy_rounded, size: 18, color: colorScheme.primary),
+              onPressed: () => _copyToClipboard(context),
+              tooltip: 'Copiar',
+            )
+          : null,
+    );
+  }
+
+  void _copyToClipboard(BuildContext context) {
+    Clipboard.setData(ClipboardData(text: value));
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Copiado al portapapeles'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
       ),
     );
   }
