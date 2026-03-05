@@ -21,7 +21,7 @@ class DetailTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final Color iconColor = color ?? colorScheme.secondary;
+    final Color iconColor = color ?? colorScheme.primary;
 
     return ListTile(
       contentPadding: EdgeInsets.zero,
