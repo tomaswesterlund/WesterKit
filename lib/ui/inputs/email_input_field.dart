@@ -8,28 +8,20 @@ class EmailInputField extends StatelessWidget {
   final String hint;
   final String? initialValue;
   final Function(String)? onChanged;
-  final Function(bool)? onValidationChanged; // Added this
   final bool isRequired;
   final String? helpText;
-  final bool isReadonly;
+  final bool isReadonly; // Renamed for consistency
 
   const EmailInputField({
     required this.label,
     this.hint = "ejemplo@correo.com",
     this.initialValue,
     this.onChanged,
-    this.onValidationChanged, // Added this
     this.isRequired = false,
     this.helpText,
-    this.isReadonly = false,
+    this.isReadonly = false, // Default to false
     super.key,
   });
-
-  // Keep your logic separate for reuse
-  bool _checkIfValid(String? value) {
-    if (value == null || value.isEmpty) return false;
-    return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,28 +36,29 @@ class EmailInputField extends StatelessWidget {
           child: InputLabel(label: label, isRequired: isRequired, helpText: helpText),
         ),
 
+        // --- Input Field ---
         TextFormField(
           initialValue: initialValue,
-          // Updated only this part to trigger the callback
-          onChanged: (value) {
-            onChanged?.call(value);
-            onValidationChanged?.call(_checkIfValid(value));
-          },
-          readOnly: isReadonly,
+          onChanged: onChanged,
+          readOnly: isReadonly, // Maps to the TextFormField property
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
 
+          // Dim text color if readonly
           style: theme.textTheme.bodyMedium?.copyWith(
             color: isReadonly ? colorScheme.onSurfaceVariant.withOpacity(0.7) : colorScheme.onSurface,
           ),
 
+          // Email Specific Validation
           validator: (value) {
-            if (isReadonly) return null;
+            if (isReadonly) return null; // Skip validation if readonly
             if (value == null || value.isEmpty) {
               return 'Por favor ingresa un correo';
             }
-            // Use the same logic here
-            return _checkIfValid(value) ? null : 'Ingresa un correo válido';
+            final bool emailValid = RegExp(
+              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+            ).hasMatch(value);
+            return emailValid ? null : 'Ingresa un correo válido';
           },
 
           decoration: InputDecoration(
@@ -78,11 +71,13 @@ class EmailInputField extends StatelessWidget {
             hintStyle: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
 
+            // Standard Border
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(color: colorScheme.outlineVariant),
             ),
 
+            // Focus Border - prevents primary color highlight when readonly
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(
@@ -91,6 +86,7 @@ class EmailInputField extends StatelessWidget {
               ),
             ),
 
+            // Error Borders
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: BorderSide(color: colorScheme.error, width: 1.5),
@@ -101,6 +97,7 @@ class EmailInputField extends StatelessWidget {
             ),
 
             filled: true,
+            // Slightly darker fill color for readonly state
             fillColor: isReadonly ? colorScheme.surfaceVariant.withOpacity(0.5) : colorScheme.surface,
           ),
         ),
@@ -108,7 +105,6 @@ class EmailInputField extends StatelessWidget {
     );
   }
 
-  // Keeping your help dialog logic exactly as is
   void _showHelpDialog(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
