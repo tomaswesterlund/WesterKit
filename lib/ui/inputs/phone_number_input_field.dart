@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
+import 'package:wester_kit/ui/formatters.dart';
 import 'package:wester_kit/ui/inputs/input_label.dart';
 
 class PhoneNumberInputField extends StatefulWidget {
@@ -13,7 +13,7 @@ class PhoneNumberInputField extends StatefulWidget {
 
   const PhoneNumberInputField({
     required this.label,
-    this.hint = "(555) 000-0000",
+    this.hint = "55 0000 0000",
     this.initialValue,
     this.onChanged,
     this.isRequired = false,
@@ -26,38 +26,42 @@ class PhoneNumberInputField extends StatefulWidget {
 }
 
 class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
-  final Map<String, String> _countryRegions = {'+1': 'US', '+46': 'SE', '+52': 'MX'};
-
+  final List<String> _dialCodes = ['+52', '+1'];
   late String _selectedDialCode;
-  late String _regionCode;
-  String _lastRawValue = "";
+  late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    _selectedDialCode = '+52';
-    _regionCode = 'MX';
-    _lastRawValue = widget.initialValue?.replaceAll(RegExp(r'\D'), '') ?? "";
+    _selectedDialCode = _dialCodes.first; // Default to +52
+
+    // Initialize controller with formatted national number if initialValue exists
+    String initialText = "";
+    if (widget.initialValue != null) {
+      final String fullFormatted = PhoneFormatter.toDisplay(widget.initialValue);
+      // Strip the dial code for the input field display
+      initialText = fullFormatted.replaceFirst(_selectedDialCode, '').trim();
+    }
+
+    _controller = TextEditingController(text: initialText);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   void _handleOnChanged(String value) {
-    // Only extract the numeric digits
-    _lastRawValue = value.replaceAll(RegExp(r'\D'), '');
-    widget.onChanged?.call('$_selectedDialCode$_lastRawValue');
+    final cleanDigits = value.replaceAll(RegExp(r'\D'), '');
+    // Always send the combined E164 format to the parent (e.g., +525551234567)
+    widget.onChanged?.call('$_selectedDialCode$cleanDigits');
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
-    // Safety check: ensure libphonenumber is initialized
-    final countries = CountryManager().countries;
-    if (countries.isEmpty) {
-      return const Center(child: Text("LibPhonenumber not initialized"));
-    }
-
-    final selectedCountry = countries.firstWhere((c) => c.countryCode == _regionCode, orElse: () => countries.first);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,19 +70,13 @@ class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
           child: InputLabel(label: widget.label, isRequired: widget.isRequired, helpText: widget.helpText),
         ),
-
         TextFormField(
-          // Key ensures the formatter updates immediately when the region changes
-          key: ValueKey(_regionCode),
-          initialValue: widget.initialValue,
+          controller: _controller,
           onChanged: _handleOnChanged,
           keyboardType: TextInputType.phone,
           inputFormatters: [
-            LibPhonenumberTextFormatter(
-              country: selectedCountry,
-              phoneNumberFormat: PhoneNumberFormat.national,
-              inputContainsCountryCode: false,
-            ),
+            FilteringTextInputFormatter.digitsOnly,
+            _InputVisualFormatter(dialCode: _selectedDialCode),
           ],
           style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface, fontFamily: 'NotoSansMono'),
           decoration: InputDecoration(
@@ -116,19 +114,36 @@ class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
           style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.primary),
           onChanged: (String? newValue) {
             if (newValue != null) {
-              setState(() {
-                _selectedDialCode = newValue;
-                _regionCode = _countryRegions[newValue] ?? 'MX';
-              });
-              // Send updated full number with new dial code
-              widget.onChanged?.call('$_selectedDialCode$_lastRawValue');
+              setState(() => _selectedDialCode = newValue);
+              _handleOnChanged(_controller.text);
             }
           },
-          items: _countryRegions.keys.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(value: value, child: Text(value));
-          }).toList(),
+          items: _dialCodes.map((code) => DropdownMenuItem(value: code, child: Text(code))).toList(),
         ),
       ),
+    );
+  }
+}
+
+/// Helper formatter for the input field that uses your PhoneFormatter logic
+class _InputVisualFormatter extends TextInputFormatter {
+  final String dialCode;
+  _InputVisualFormatter({required this.dialCode});
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) return newValue;
+
+    // Use your logic: combine dialCode + digits to get the formatted version
+    final String fullNumber = '$dialCode${newValue.text.replaceAll(RegExp(r'\D'), '')}';
+    final String formattedFull = PhoneFormatter.toDisplay(fullNumber);
+
+    // Remove the dial code from the front to keep only the masked number in the field
+    final String maskedLocal = formattedFull.replaceFirst(dialCode, '').trim();
+
+    return TextEditingValue(
+      text: maskedLocal,
+      selection: TextSelection.collapsed(offset: maskedLocal.length),
     );
   }
 }
