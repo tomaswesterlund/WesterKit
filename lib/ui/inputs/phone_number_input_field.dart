@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wester_kit/ui/formatters.dart';
+import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:wester_kit/ui/inputs/input_label.dart';
 
 class PhoneNumberInputField extends StatefulWidget {
@@ -26,26 +26,38 @@ class PhoneNumberInputField extends StatefulWidget {
 }
 
 class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
-  final List<String> _countryCodes = ['+1', '+46', '+52'];
-  late String _selectedCountryCode;
-  String _currentDigits = "";
+  final Map<String, String> _countryRegions = {'+1': 'US', '+46': 'SE', '+52': 'MX'};
+
+  late String _selectedDialCode;
+  late String _regionCode;
+  String _lastRawValue = "";
 
   @override
   void initState() {
     super.initState();
-    _selectedCountryCode = _countryCodes.last; // Default to +52
-    _currentDigits = PhoneFormatter.toRaw(widget.initialValue);
+    _selectedDialCode = '+52';
+    _regionCode = 'MX';
+    _lastRawValue = widget.initialValue?.replaceAll(RegExp(r'\D'), '') ?? "";
   }
 
-  void _notifyChange() {
-    // Standardized output: +525551234567
-    widget.onChanged?.call('$_selectedCountryCode$_currentDigits');
+  void _handleOnChanged(String value) {
+    // Only extract the numeric digits
+    _lastRawValue = value.replaceAll(RegExp(r'\D'), '');
+    widget.onChanged?.call('$_selectedDialCode$_lastRawValue');
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
+    // Safety check: ensure libphonenumber is initialized
+    final countries = CountryManager().countries;
+    if (countries.isEmpty) {
+      return const Center(child: Text("LibPhonenumber not initialized"));
+    }
+
+    final selectedCountry = countries.firstWhere((c) => c.countryCode == _regionCode, orElse: () => countries.first);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,43 +66,23 @@ class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
           child: InputLabel(label: widget.label, isRequired: widget.isRequired, helpText: widget.helpText),
         ),
+
         TextFormField(
-          initialValue: PhoneFormatter.toVisual(widget.initialValue),
-          onChanged: (value) {
-            _currentDigits = PhoneFormatter.toRaw(value);
-            _notifyChange();
-          },
+          // Key ensures the formatter updates immediately when the region changes
+          key: ValueKey(_regionCode),
+          initialValue: widget.initialValue,
+          onChanged: _handleOnChanged,
           keyboardType: TextInputType.phone,
           inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(15),
-            PhoneInputFormatter(), // Custom visual formatter
+            LibPhonenumberTextFormatter(
+              country: selectedCountry,
+              phoneNumberFormat: PhoneNumberFormat.national,
+              inputContainsCountryCode: false,
+            ),
           ],
           style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface, fontFamily: 'NotoSansMono'),
           decoration: InputDecoration(
-            prefixIcon: Container(
-              margin: const EdgeInsets.only(right: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                border: Border(right: BorderSide(color: colorScheme.outlineVariant, width: 1)),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: _selectedCountryCode,
-                  icon: const Icon(Icons.arrow_drop_down, size: 20),
-                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.primary),
-                  onChanged: (String? newValue) {
-                    if (newValue != null) {
-                      setState(() => _selectedCountryCode = newValue);
-                      _notifyChange();
-                    }
-                  },
-                  items: _countryCodes.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(value: value, child: Text(value));
-                  }).toList(),
-                ),
-              ),
-            ),
+            prefixIcon: _buildCountrySelector(colorScheme, theme),
             hintText: widget.hint,
             hintStyle: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.outline, fontFamily: 'NotoSansMono'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
@@ -109,17 +101,34 @@ class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
       ],
     );
   }
-}
 
-class PhoneInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    // Reuse the central helper for the real-time visual mask
-    final formatted = PhoneFormatter.toVisual(newValue.text);
-
-    return newValue.copyWith(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
+  Widget _buildCountrySelector(ColorScheme colorScheme, ThemeData theme) {
+    return Container(
+      margin: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        border: Border(right: BorderSide(color: colorScheme.outlineVariant, width: 1)),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _selectedDialCode,
+          icon: const Icon(Icons.arrow_drop_down, size: 20),
+          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.primary),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              setState(() {
+                _selectedDialCode = newValue;
+                _regionCode = _countryRegions[newValue] ?? 'MX';
+              });
+              // Send updated full number with new dial code
+              widget.onChanged?.call('$_selectedDialCode$_lastRawValue');
+            }
+          },
+          items: _countryRegions.keys.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(value: value, child: Text(value));
+          }).toList(),
+        ),
+      ),
     );
   }
 }
