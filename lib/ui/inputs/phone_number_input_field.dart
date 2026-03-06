@@ -22,6 +22,15 @@ class PhoneNumberInputField extends StatelessWidget {
     super.key,
   });
 
+  /// Formats raw digits into the visual mask for initial display
+  String? _formatInitial(String? value) {
+    if (value == null || value.isEmpty) return value;
+    // If it's already formatted, return it; otherwise, format 10 digits
+    final digits = value.replaceAll(RegExp(r'\D'), '');
+    if (digits.length != 10) return value;
+    return "(${digits.substring(0, 3)}) ${digits.substring(3, 6)}-${digits.substring(6)}";
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -37,8 +46,12 @@ class PhoneNumberInputField extends StatelessWidget {
 
         // --- Standardized TextFormField ---
         TextFormField(
-          initialValue: initialValue,
-          onChanged: onChanged,
+          initialValue: _formatInitial(initialValue),
+          onChanged: (value) {
+            // Strip formatting characters so the caller gets "5551231234"
+            final digitsOnly = value.replaceAll(RegExp(r'\D'), '');
+            onChanged?.call(digitsOnly);
+          },
           keyboardType: TextInputType.phone,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
@@ -93,7 +106,6 @@ class PhoneInputFormatter extends TextInputFormatter {
     if (newValue.selection.baseOffset == 0) return newValue;
 
     final buffer = StringBuffer();
-    // Simplified logic: format digits as (XXX) XXX-XXXX
     for (int i = 0; i < text.length; i++) {
       if (i == 0) buffer.write('(');
       if (i == 3) buffer.write(') ');
