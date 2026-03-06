@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wester_kit/ui/formatters.dart';
 import 'package:wester_kit/ui/inputs/input_label.dart';
 
 class PhoneNumberInputField extends StatefulWidget {
@@ -33,7 +34,7 @@ class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
   void initState() {
     super.initState();
     _selectedCountryCode = _countryCodes.last; // Default to +52
-    _currentDigits = PhoneFormatter.toRawDigits(widget.initialValue);
+    _currentDigits = PhoneFormatter.toRaw(widget.initialValue);
   }
 
   void _notifyChange() {
@@ -56,7 +57,7 @@ class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
         TextFormField(
           initialValue: PhoneFormatter.toVisual(widget.initialValue),
           onChanged: (value) {
-            _currentDigits = PhoneFormatter.toRawDigits(value);
+            _currentDigits = PhoneFormatter.toRaw(value);
             _notifyChange();
           },
           keyboardType: TextInputType.phone,
