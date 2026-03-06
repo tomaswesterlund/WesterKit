@@ -4,11 +4,11 @@ import 'package:wester_kit/ui/inputs/input_label.dart';
 import 'package:wester_kit/ui/texts/body_text.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
 
-class PhoneNumberInputField extends StatelessWidget {
+class PhoneNumberInputField extends StatefulWidget {
   final String label;
   final String hint;
-  final String? initialValue;
-  final Function(String)? onChanged;
+  final String? initialValue; // Expects raw digits, e.g., "5551234567"
+  final Function(String)? onChanged; // Returns "+525551234567"
   final bool isRequired;
   final String? helpText;
 
@@ -22,10 +22,29 @@ class PhoneNumberInputField extends StatelessWidget {
     super.key,
   });
 
-  /// Formats raw digits into the visual mask for initial display
+  @override
+  State<PhoneNumberInputField> createState() => _PhoneNumberInputFieldState();
+}
+
+class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
+  final List<String> _countryCodes = ['+1', '+46', '+52'];
+  late String _selectedCountryCode;
+  String _currentDigits = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCountryCode = _countryCodes.last; // Default to +52
+    _currentDigits = widget.initialValue?.replaceAll(RegExp(r'\D'), '') ?? "";
+  }
+
+  void _notifyChange() {
+    // Joins the code and digits: +52 + 5551234567
+    widget.onChanged?.call('$_selectedCountryCode$_currentDigits');
+  }
+
   String? _formatInitial(String? value) {
     if (value == null || value.isEmpty) return value;
-    // If it's already formatted, return it; otherwise, format 10 digits
     final digits = value.replaceAll(RegExp(r'\D'), '');
     if (digits.length != 10) return value;
     return "(${digits.substring(0, 3)}) ${digits.substring(3, 6)}-${digits.substring(6)}";
@@ -41,16 +60,14 @@ class PhoneNumberInputField extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: InputLabel(label: label, isRequired: isRequired, helpText: helpText),
+          child: InputLabel(label: widget.label, isRequired: widget.isRequired, helpText: widget.helpText),
         ),
 
-        // --- Standardized TextFormField ---
         TextFormField(
-          initialValue: _formatInitial(initialValue),
+          initialValue: _formatInitial(widget.initialValue),
           onChanged: (value) {
-            // Strip formatting characters so the caller gets "5551231234"
-            final digitsOnly = value.replaceAll(RegExp(r'\D'), '');
-            onChanged?.call(digitsOnly);
+            _currentDigits = value.replaceAll(RegExp(r'\D'), '');
+            _notifyChange();
           },
           keyboardType: TextInputType.phone,
           inputFormatters: [
@@ -60,8 +77,31 @@ class PhoneNumberInputField extends StatelessWidget {
           ],
           style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface, fontFamily: 'NotoSansMono'),
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.phone_outlined, color: colorScheme.primary),
-            hintText: hint,
+            // --- Country Code Selector ---
+            prefixIcon: Container(
+              margin: const EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                border: Border(right: BorderSide(color: colorScheme.outlineVariant, width: 1)),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: _selectedCountryCode,
+                  icon: const Icon(Icons.arrow_drop_down, size: 20),
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.primary),
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      setState(() => _selectedCountryCode = newValue);
+                      _notifyChange();
+                    }
+                  },
+                  items: _countryCodes.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(value: value, child: Text(value));
+                  }).toList(),
+                ),
+              ),
+            ),
+            hintText: widget.hint,
             hintStyle: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.outline, fontFamily: 'NotoSansMono'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
             filled: true,
@@ -77,24 +117,6 @@ class PhoneNumberInputField extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  void _showHelpDialog(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: HeaderText.three(label),
-        content: BodyText.medium(helpText!),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: HeaderText.six('Entendido', color: colorScheme.primary),
-          ),
-        ],
-      ),
     );
   }
 }
