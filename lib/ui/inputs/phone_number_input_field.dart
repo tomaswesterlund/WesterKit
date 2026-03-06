@@ -63,7 +63,7 @@ class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
           keyboardType: TextInputType.phone,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(10),
+            LengthLimitingTextInputFormatter(15),
             PhoneInputFormatter(), // Custom visual formatter
           ],
           style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface, fontFamily: 'NotoSansMono'),
