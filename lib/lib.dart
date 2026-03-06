@@ -14,6 +14,7 @@ export 'ui/cards/info_card.dart';
 export 'ui/cards/shimmer_card.dart';
 export 'ui/containers/green_box_container.dart';
 export 'ui/filter_selector.dart';
+export 'ui/formatters.dart';
 export 'ui/inputs/action_link.dart';
 export 'ui/inputs/amount_input_field.dart';
 export 'ui/inputs/checkbox_field.dart';
