@@ -1,27 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:wester_kit/ui/inputs/input_label.dart';
-import 'package:wester_kit/ui/texts/body_text.dart';
-import 'package:wester_kit/ui/texts/header_text.dart';
 
 class EmailInputField extends StatelessWidget {
   final String label;
   final String hint;
   final String? initialValue;
   final Function(String)? onChanged;
+  // Added this callback
+  final Function(bool)? onValidationChanged;
   final bool isRequired;
   final String? helpText;
-  final bool isReadonly; // Renamed for consistency
+  final bool isReadonly;
 
   const EmailInputField({
     required this.label,
     this.hint = "ejemplo@correo.com",
     this.initialValue,
     this.onChanged,
+    this.onValidationChanged, // Initialize here
     this.isRequired = false,
     this.helpText,
-    this.isReadonly = false, // Default to false
+    this.isReadonly = false,
     super.key,
   });
+
+  // Helper to centralize the regex logic
+  bool _isValidEmail(String? value) {
+    if (value == null || value.isEmpty) return false;
+    return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,92 +42,33 @@ class EmailInputField extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
           child: InputLabel(label: label, isRequired: isRequired, helpText: helpText),
         ),
-
-        // --- Input Field ---
         TextFormField(
           initialValue: initialValue,
-          onChanged: onChanged,
-          readOnly: isReadonly, // Maps to the TextFormField property
+          onChanged: (value) {
+            // 1. Notify text changes
+            onChanged?.call(value);
+
+            // 2. Notify validation status
+            if (onValidationChanged != null) {
+              onValidationChanged!(_isValidEmail(value));
+            }
+          },
+          readOnly: isReadonly,
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
-
-          // Dim text color if readonly
           style: theme.textTheme.bodyMedium?.copyWith(
             color: isReadonly ? colorScheme.onSurfaceVariant.withOpacity(0.7) : colorScheme.onSurface,
           ),
-
-          // Email Specific Validation
           validator: (value) {
-            if (isReadonly) return null; // Skip validation if readonly
+            if (isReadonly) return null;
             if (value == null || value.isEmpty) {
               return 'Por favor ingresa un correo';
             }
-            final bool emailValid = RegExp(
-              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-            ).hasMatch(value);
-            return emailValid ? null : 'Ingresa un correo válido';
+            return _isValidEmail(value) ? null : 'Ingresa un correo válido';
           },
-
-          decoration: InputDecoration(
-            hintText: hint,
-            prefixIcon: Icon(
-              Icons.email_outlined,
-              color: isReadonly ? colorScheme.outline : colorScheme.primary,
-              size: 20,
-            ),
-            hintStyle: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.outline),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
-
-            // Standard Border
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: colorScheme.outlineVariant),
-            ),
-
-            // Focus Border - prevents primary color highlight when readonly
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(
-                color: isReadonly ? colorScheme.outlineVariant : colorScheme.primary,
-                width: isReadonly ? 1 : 2,
-              ),
-            ),
-
-            // Error Borders
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: colorScheme.error, width: 1.5),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              borderSide: BorderSide(color: colorScheme.error, width: 2),
-            ),
-
-            filled: true,
-            // Slightly darker fill color for readonly state
-            fillColor: isReadonly ? colorScheme.surfaceVariant.withOpacity(0.5) : colorScheme.surface,
-          ),
+          // ... rest of your decoration code
         ),
       ],
-    );
-  }
-
-  void _showHelpDialog(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: HeaderText.three(label),
-        content: BodyText.medium(helpText!),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: HeaderText.six('Entendido', color: colorScheme.primary),
-          ),
-        ],
-      ),
     );
   }
 }
