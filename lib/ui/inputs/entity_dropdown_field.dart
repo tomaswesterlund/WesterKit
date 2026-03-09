@@ -29,27 +29,9 @@ class EntityDropdownField<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // --- Label Row ---
         Padding(
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              BodyText.medium(label, color: colorScheme.onSurface),
-              if (isRequired)
-                Text(
-                  ' *',
-                  style: TextStyle(color: colorScheme.error, fontWeight: FontWeight.bold),
-                ),
-              if (helpText != null) ...[
-                const SizedBox(width: 6),
-                GestureDetector(
-                  onTap: () => _showHelpDialog(context),
-                  child: Icon(Icons.help_outline_rounded, size: 16, color: colorScheme.outline),
-                ),
-              ],
-            ],
-          ),
+          child: InputLabel(label: label, isRequired: isRequired, helpText: helpText),
         ),
 
         // --- Dropdown Field ---
