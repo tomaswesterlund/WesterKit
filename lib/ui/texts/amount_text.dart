@@ -6,29 +6,28 @@ class AmountText extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
   final TextAlign? textAlign;
+  final Color? color; // Nuevo campo opcional
 
   const AmountText({
     required this.amountInCents,
     this.fontSize = 48.0,
     this.fontWeight = FontWeight.bold,
     this.textAlign,
+    this.color, // Incluido en el constructor
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    // Logic for conditional coloring
-    Color? effectiveColor;
-
-    if (amountInCents > 0) {
-      effectiveColor = Colors.green;
-    } else if (amountInCents < 0) {
-      effectiveColor = Colors.red;
-    } else {
-      effectiveColor = Colors.black;
-    }
+    // El color proporcionado tiene prioridad absoluta.
+    // Si es null, se aplica la lógica basada en el monto.
+    final Color effectiveColor =
+        color ??
+        (amountInCents > 0
+            ? Colors.green
+            : amountInCents < 0
+            ? Colors.red
+            : Colors.black);
 
     return FittedBox(
       fit: BoxFit.scaleDown,
