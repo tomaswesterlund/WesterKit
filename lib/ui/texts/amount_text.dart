@@ -26,11 +26,11 @@ class AmountText extends StatelessWidget {
 
     if (effectiveColor == null) {
       if (amountInCents > 0) {
-        effectiveColor = Colors.green; // Success
+        effectiveColor = Colors.green;
       } else if (amountInCents < 0) {
-        effectiveColor = Colors.red; // Danger
+        effectiveColor = Colors.red;
       } else {
-        effectiveColor = Colors.black; // Neutral zero
+        effectiveColor = Colors.black;
       }
     }
 
