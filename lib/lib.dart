@@ -4,6 +4,7 @@ export 'extensions/formatters/currency_formatter.dart';
 export 'extensions/formatters/date_formatters.dart';
 export 'extensions/formatters/id_formatter.dart';
 export 'extensions/nullable_string_extensions.dart';
+export 'ui/badges/status_badge.dart';
 export 'ui/buttons/primary_button.dart';
 export 'ui/buttons/social_login_button.dart';
 export 'ui/buttons/success_button.dart';
