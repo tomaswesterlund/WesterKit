@@ -7,6 +7,7 @@ class DetailTile extends StatelessWidget {
   final String value;
   final Color? color;
   final bool enableCopy;
+  final VoidCallback? onPressed; // Added optional onPressed
 
   const DetailTile({
     super.key,
@@ -15,6 +16,7 @@ class DetailTile extends StatelessWidget {
     required this.value,
     this.color,
     this.enableCopy = false,
+    this.onPressed,
   });
 
   @override
@@ -24,6 +26,7 @@ class DetailTile extends StatelessWidget {
     final Color iconColor = color ?? colorScheme.primary;
 
     return ListTile(
+      onTap: onPressed, // Becomes interactive if not null
       contentPadding: EdgeInsets.zero,
       leading: Container(
         padding: const EdgeInsets.all(8),
@@ -42,25 +45,38 @@ class DetailTile extends StatelessWidget {
           color: colorScheme.onSurface.withOpacity(0.87),
         ),
       ),
-      trailing: enableCopy
-          ? IconButton(
-              icon: Icon(Icons.copy_rounded, size: 18, color: colorScheme.primary),
-              onPressed: () => _copyToClipboard(context),
-              tooltip: 'Copiar',
-            )
-          : null,
+      trailing: _buildTrailing(colorScheme),
     );
   }
 
-  void _copyToClipboard(BuildContext context) {
+  Widget? _buildTrailing(ColorScheme colorScheme) {
+    if (enableCopy) {
+      return IconButton(
+        icon: Icon(Icons.copy_rounded, size: 18, color: colorScheme.primary),
+        onPressed: () => _copyToClipboard(null), // Context optional if using ScaffoldMessenger.maybeOf
+        tooltip: 'Copiar',
+      );
+    }
+
+    // Show chevron if tile is clickable but doesn't have a copy action
+    if (onPressed != null) {
+      return Icon(Icons.chevron_right_rounded, size: 20, color: colorScheme.outline);
+    }
+
+    return null;
+  }
+
+  void _copyToClipboard(BuildContext? context) {
     Clipboard.setData(ClipboardData(text: value));
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Copiado al portapapeles'),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    if (context != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Copiado al portapapeles'),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 }
