@@ -43,6 +43,7 @@ export 'ui/state_switcher.dart';
 export 'ui/texts/amount_text.dart';
 export 'ui/texts/body_text.dart';
 export 'ui/texts/header_text.dart';
+export 'ui/texts/overline_text.dart';
 export 'ui/texts/section_header_text.dart';
 export 'ui/tiles/detail_tile.dart';
 export 'ui/tiles/info_tile.dart';

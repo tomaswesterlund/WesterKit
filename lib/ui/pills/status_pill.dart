@@ -24,7 +24,7 @@ class StatusPill extends StatelessWidget {
   factory StatusPill.warning({required Widget child, IconData? icon}) {
     return StatusPill._(
       child: child,
-      primaryColor: Colors.orange.shade900,
+      primaryColor: Colors.orange.shade700,
       backgroundColor: Colors.orange.shade50,
       icon: icon ?? Icons.history_toggle_off_rounded,
     );
