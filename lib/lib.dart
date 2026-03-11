@@ -10,7 +10,6 @@ export 'ui/buttons/social_login_button.dart';
 export 'ui/buttons/success_button.dart';
 export 'ui/cards/default_card.dart';
 export 'ui/cards/gradient_card.dart';
-export 'ui/cards/green_box_card.dart';
 export 'ui/cards/hero_card.dart';
 export 'ui/cards/info_card.dart';
 export 'ui/cards/shimmer_card.dart';
