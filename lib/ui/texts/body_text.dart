@@ -5,6 +5,8 @@ class BodyText extends StatelessWidget {
   final TextStyle? style;
   final TextAlign? textAlign;
   final Color? color;
+  final int? maxLines; // Nuevo
+  final TextOverflow? overflow; // Nuevo
 
   const BodyText(
     this.text, {
@@ -12,14 +14,18 @@ class BodyText extends StatelessWidget {
     this.style,
     this.color,
     this.textAlign,
+    this.maxLines,
+    this.overflow,
   });
 
-  /// Body Large: 18PX / 28PX LINE (Body Parrafo 01)
+  /// Body Large: 18PX / 28PX LINE
   factory BodyText.large(
     String text, {
     Color? color,
     FontWeight? fontWeight,
     TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
     Key? key,
   }) =>
       BodyText(
@@ -27,6 +33,8 @@ class BodyText extends StatelessWidget {
         key: key,
         textAlign: textAlign,
         color: color,
+        maxLines: maxLines,
+        overflow: overflow,
         style: TextStyle(
           fontSize: 18,
           height: 28 / 18,
@@ -34,12 +42,14 @@ class BodyText extends StatelessWidget {
         ),
       );
 
-  /// Body Medium: 16PX / 24PX LINE (Body Parrafo 02)
+  /// Body Medium: 16PX / 24PX LINE
   factory BodyText.medium(
     String text, {
     Color? color,
     FontWeight? fontWeight,
     TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
     Key? key,
   }) =>
       BodyText(
@@ -47,6 +57,8 @@ class BodyText extends StatelessWidget {
         key: key,
         textAlign: textAlign,
         color: color,
+        maxLines: maxLines,
+        overflow: overflow,
         style: TextStyle(
           fontSize: 16,
           height: 24 / 16,
@@ -54,12 +66,14 @@ class BodyText extends StatelessWidget {
         ),
       );
 
-  /// Body Small: 14PX / 20PX LINE (Body Parrafo 03)
+  /// Body Small: 14PX / 20PX LINE
   factory BodyText.small(
     String text, {
     Color? color,
     FontWeight? fontWeight,
     TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
     Key? key,
   }) =>
       BodyText(
@@ -67,6 +81,8 @@ class BodyText extends StatelessWidget {
         key: key,
         textAlign: textAlign,
         color: color,
+        maxLines: maxLines,
+        overflow: overflow,
         style: TextStyle(
           fontSize: 14,
           height: 20 / 14,
@@ -74,12 +90,14 @@ class BodyText extends StatelessWidget {
         ),
       );
 
-  /// Caption / Tiny: 12PX / 16PX LINE (Overline)
+  /// Caption / Tiny: 12PX / 16PX LINE
   factory BodyText.tiny(
     String text, {
     Color? color,
     FontWeight? fontWeight,
     TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
     Key? key,
   }) =>
       BodyText(
@@ -87,11 +105,12 @@ class BodyText extends StatelessWidget {
         key: key,
         textAlign: textAlign,
         color: color,
+        maxLines: maxLines,
+        overflow: overflow,
         style: TextStyle(
           fontSize: 12,
           height: 16 / 12,
           fontWeight: fontWeight ?? FontWeight.normal,
-          // Note: Guide indicates Poppins for this specific size
           fontFamily: 'Poppins', 
         ),
       );
@@ -103,9 +122,10 @@ class BodyText extends StatelessWidget {
     return Text(
       text,
       textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
       style: style?.copyWith(
         color: color ?? theme.textTheme.bodyMedium?.color,
-        // Inherits Raleway from theme for Large/Medium/Small
         fontFamily: style?.fontFamily ?? theme.textTheme.bodyMedium?.fontFamily,
       ),
     );
