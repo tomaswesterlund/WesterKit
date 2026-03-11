@@ -47,6 +47,7 @@ export 'ui/texts/body_text.dart';
 export 'ui/texts/header_text.dart';
 export 'ui/texts/overline_text.dart';
 export 'ui/texts/section_header_text.dart';
+export 'ui/tiles/action_tile.dart';
 export 'ui/tiles/detail_tile.dart';
 export 'ui/tiles/info_tile.dart';
 export 'ui/views/access_denied_view.dart';
