@@ -17,6 +17,7 @@ export 'ui/cards/shimmer_card.dart';
 export 'ui/cards/stat_card.dart';
 export 'ui/cards/success_card.dart';
 export 'ui/containers/green_box_container.dart';
+export 'ui/dialogs/info_popup.dart';
 export 'ui/filter_selector.dart';
 export 'ui/formatters.dart';
 export 'ui/inputs/action_link.dart';
