@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:wester_kit/ui/texts/header_text.dart';
 
-class DrawerHeader extends StatelessWidget {
+class WkDrawerHeader extends StatelessWidget {
   final String name;
   final String email;
 
-  const DrawerHeader({required this.name, required this.email, super.key});
+  const WkDrawerHeader({required this.name, required this.email, super.key});
 
   @override
   Widget build(BuildContext context) {
