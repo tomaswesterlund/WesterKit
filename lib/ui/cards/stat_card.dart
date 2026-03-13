@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:wester_kit/lib.dart'; // Asegúrate de importar tus componentes base
+import 'package:wester_kit/lib.dart';
 
 class StatCard extends StatelessWidget {
   final String label;
   final String value;
   final IconData icon;
 
-  const StatCard({required this.label, required this.value, required this.icon, super.key});
+  const StatCard({
+    required this.label, 
+    required this.value, 
+    required this.icon, 
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,40 +19,64 @@ class StatCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      // Padding interno para maximizar el área de los elementos
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(24), // Bordes más suaves
+        border: Border.all(color: colorScheme.outlineVariant.withOpacity(0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Icono con fondo sutil para que destaque
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: colorScheme.primary.withOpacity(0.1), shape: BoxShape.circle),
-            child: Icon(icon, color: colorScheme.primary, size: 20),
+          // 1. Header: Etiqueta en la parte superior
+          OverlineText(
+            label.toUpperCase(), 
+            color: colorScheme.outline,
           ),
+          
+          const Spacer(), // Empuja el contenido hacia el centro/abajo
 
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // 2. Body: Icono y Valor en una fila impactante
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Valor numérico con la fuente Mono del sistema
-              Text(
-                value,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onSurface,
-                  fontFamily: 'NotoSansMono', // Prioridad para datos financieros/numéricos
+              // Icono de mayor tamaño
+              Icon(
+                icon, 
+                color: colorScheme.primary, 
+                size: 32, // Tamaño incrementado
+              ),
+              const SizedBox(width: 8),
+              
+              // Valor numérico dominante
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    value,
+                    style: theme.textTheme.headlineLarge?.copyWith(
+                      fontWeight: FontWeight.w900, // Extra Bold para impacto
+                      color: colorScheme.onSurface,
+                      letterSpacing: -1,
+                      fontFamily: 'NotoSansMono',
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 2),
-              // Etiqueta usando el estilo Overline
-              OverlineText(label, color: colorScheme.outline),
             ],
           ),
+          
+          const SizedBox(height: 4), // Espacio final para balance
         ],
       ),
     );
